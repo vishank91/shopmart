@@ -151,13 +151,14 @@ export default function Navbar() {
               </button>
               <div className="collapse navbar-collapse" id="navbarCollapse">
                 <div className="navbar-nav ms-auto py-0">
-                  <a href="index.html" className="nav-item nav-link text-light">Home</a>
-                  <a href="single.html" className="nav-item nav-link text-light">About</a>
-                  <a href="shop.html" className="nav-item nav-link text-light">Shop</a>
-                  <a href="shop.html" className="nav-item nav-link text-light">Feature</a>
-                  <a href="shop.html" className="nav-item nav-link text-light">Faq</a>
-                  <a href="shop.html" className="nav-item nav-link text-light">Testimonial</a>
-                  <a href="shop.html" className="nav-item nav-link text-light">Contact Us</a>
+                  <Link to="/" className="nav-item nav-link text-light">Home</Link>
+                  <Link to="/about" className="nav-item nav-link text-light">About</Link>
+                  <Link to="/shop" className="nav-item nav-link text-light">Shop</Link>
+                  <Link to="/feature" className="nav-item nav-link text-light">Feature</Link>
+                  <Link to="/faq" className="nav-item nav-link text-light">Faq</Link>
+                  <Link to="/testimonial" className="nav-item nav-link text-light">Testimonial</Link>
+                  <Link to="/contact" className="nav-item nav-link text-light">Contact Us</Link>
+                  <Link to="/admin" className="nav-item nav-link text-light">Admin</Link>
                   {/* <div className="nav-item dropdown">
                     <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div className="dropdown-menu m-0">
