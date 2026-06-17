@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
 import Breadcrum from '../../../Components/Breadcrum'
 import AdminSidebar from '../../../Components/Admin/AdminSidebar'
 import TextValidators from '../../../FormValidators/TextValidators'
+import ImageValidators from '../../../FormValidators/ImageValidators'
 
 export default function AdminMaincategoryCreatePage() {
     let [data, setData] = useState({
@@ -17,25 +18,53 @@ export default function AdminMaincategoryCreatePage() {
     })
     let [show, setShow] = useState(false)
 
+    let [MaincategoryStateData, setMaincategoryStateData] = useState([])
+    let navigate = useNavigate()
+
     function getInputData(e) {
         let name = e.target.name
-        let value = e.target.value
-        setData({ ...data, [name]: value })
-        setErrorMessage({ ...errorMessage, [name]: TextValidators(e) })
+        let value = name === "pic" ? "maincategory/" + e.target.files[0].name : e.target.value
+        // let value = name === "pic" ? e.target.files[0]: e.target.value
+
+        setData({ ...data, [name]: name === "status" ? value === "1" ? true : false : value })
+        setErrorMessage({ ...errorMessage, [name]: name === "pic" ? ImageValidators(e) : TextValidators(e) })
     }
-    function postData(e) {
+    async function postData(e) {
         e.preventDefault()
         let error = Object.values(errorMessage).find(x => x !== "")
         if (error)
             setShow(true)
         else {
-            alert(`
-                    Name    :   ${data.name}
-                    Pic     :   ${data.pic}
-                    Status  :   ${data.status}
-                `)
+            let item = MaincategoryStateData.find(x => x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
+            if (item) {
+                setErrorMessage({ ...errorMessage, name: 'Maincategory With This Name Already Exist' })
+                setShow(true)
+                return
+            }
+            let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/maincategory`, {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({ ...data })
+            })
+            response = await response.json()
+            navigate("/admin/maincategory")
         }
     }
+
+    useEffect(() => {
+        (async () => {
+            let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/maincategory`, {
+                method: "GET",
+                headers: {
+                    "content-type": "application/json"
+                }
+            })
+            response = await response.json()
+            setMaincategoryStateData(response)
+        })()
+    }, [])
     return (
         <>
             <Breadcrum title="Admin" />
