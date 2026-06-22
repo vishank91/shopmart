@@ -1,38 +1,37 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+
+import DataTable from 'datatables.net-dt'
+import "datatables.net-dt/css/dataTables.dataTables.min.css"
 
 import Breadcrum from '../../../Components/Breadcrum'
 import AdminSidebar from '../../../Components/Admin/AdminSidebar'
+
+import { getMaincategory, deleteMaincategory } from "../../../Redux/ActionCreators/MaincategoryActionCreators"
 export default function AdminMaincategoryPage() {
     let [data, setData] = useState([])
-    let [MaincategoryStateData, setMaincategoryStateData] = useState([])
 
-    async function deleteRecord(id) {
+    let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
+    let dispatch = useDispatch()
+
+    function deleteRecord(id) {
         if (window.confirm("Are You Sure to Delete That Record")) {
-            let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/maincategory/${id}`, {
-                method: "DELETE",
-                headers: {
-                    "content-type": "application/json"
-                }
-            })
-            response = await response.json()
+            dispatch(deleteMaincategory({ id: id }))
             setData(data.filter(x => x.id !== id))
         }
     }
 
     useEffect(() => {
-        (async () => {
-            let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/maincategory`, {
-                method: "GET",
-                headers: {
-                    "content-type": "application/json"
-                }
-            })
-            response = await response.json()
-            setData(response)
-            setMaincategoryStateData(response)
+        let time = (() => {
+            dispatch(getMaincategory())
+            if (MaincategoryStateData.length) {
+                setData(MaincategoryStateData)
+                return setTimeout(() => new DataTable('#myTable'), 500)
+            }
         })()
-    }, [])
+        return () => clearTimeout(time)
+    }, [MaincategoryStateData.length])
     return (
         <>
             <Breadcrum title="Admin" />
@@ -44,7 +43,7 @@ export default function AdminMaincategoryPage() {
                     <div className="col-md-9">
                         <h5 className='bg-primary text-light text-center p-2'>Maincategory <Link to="/admin/maincategory/create"><i className='bi bi-plus text-light float-end'></i></Link></h5>
                         <div className="table-responsive">
-                            <table className='table table-bordered text-dark'>
+                            <table id='myTable' className='table table-bordered text-dark'>
                                 <thead>
                                     <tr>
                                         <th>Id</th>
