@@ -19,9 +19,26 @@ import PrivacyPolicy from './Pages/PrivacyPolicy'
 import TermsAndConditions from './Pages/TermsAndConditions'
 import ReturnAndRefundPolicy from './Pages/ReturnAndRefundPolicy'
 import AdminHomePage from './Pages/Admin/AdminHomePage'
+
 import AdminMaincategoryPage from './Pages/Admin/Maincategory/AdminMaincategoryPage'
 import AdminMaincategoryCreatePage from './Pages/Admin/Maincategory/AdminMaincategoryCreatePage'
 import AdminMaincategoryUpdatePage from './Pages/Admin/Maincategory/AdminMaincategoryUpdatePage'
+
+import AdminSubcategoryPage from './Pages/Admin/Subcategory/AdminSubcategoryPage'
+import AdminSubcategoryCreatePage from './Pages/Admin/Subcategory/AdminSubcategoryCreatePage'
+import AdminSubcategoryUpdatePage from './Pages/Admin/Subcategory/AdminSubcategoryUpdatePage'
+
+import AdminBrandPage from './Pages/Admin/Brand/AdminBrandPage'
+import AdminBrandCreatePage from './Pages/Admin/Brand/AdminBrandCreatePage'
+import AdminBrandUpdatePage from './Pages/Admin/Brand/AdminBrandUpdatePage'
+
+import AdminFeaturePage from './Pages/Admin/Feature/AdminFeaturePage'
+import AdminFeatureCreatePage from './Pages/Admin/Feature/AdminFeatureCreatePage'
+import AdminFeatureUpdatePage from './Pages/Admin/Feature/AdminFeatureUpdatePage'
+
+import AdminFaqPage from './Pages/Admin/Faq/AdminFaqPage'
+import AdminFaqCreatePage from './Pages/Admin/Faq/AdminFaqCreatePage'
+import AdminFaqUpdatePage from './Pages/Admin/Faq/AdminFaqUpdatePage'
 
 export default function App() {
   return (
@@ -52,8 +69,23 @@ export default function App() {
         <Route path='/admin/maincategory/create' element={<AdminMaincategoryCreatePage />} />
         <Route path='/admin/maincategory/update/:id' element={<AdminMaincategoryUpdatePage />} />
 
+        <Route path='/admin/subcategory' element={<AdminSubcategoryPage />} />
+        <Route path='/admin/subcategory/create' element={<AdminSubcategoryCreatePage />} />
+        <Route path='/admin/subcategory/update/:id' element={<AdminSubcategoryUpdatePage />} />
 
+        <Route path='/admin/brand' element={<AdminBrandPage />} />
+        <Route path='/admin/brand/create' element={<AdminBrandCreatePage />} />
+        <Route path='/admin/brand/update/:id' element={<AdminBrandUpdatePage />} />
+
+        <Route path='/admin/feature' element={<AdminFeaturePage />} />
+        <Route path='/admin/feature/create' element={<AdminFeatureCreatePage />} />
+        <Route path='/admin/feature/update/:id' element={<AdminFeatureUpdatePage />} />
+
+        <Route path='/admin/faq' element={<AdminFaqPage />} />
+        <Route path='/admin/faq/create' element={<AdminFaqCreatePage />} />
+        <Route path='/admin/faq/update/:id' element={<AdminFaqUpdatePage />} />
         <Route path='/*' element={<ErrorPage />} />
+
       </Routes>
       <Footer />
     </BrowserRouter>
