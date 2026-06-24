@@ -49,7 +49,7 @@ body {
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    color: #919191;
+    color: black;
     background-color: #fff;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
@@ -1996,15 +1996,15 @@ progress {
 
 .table {
     --bs-table-bg: transparent;
-    --bs-table-striped-color: #919191;
+    --bs-table-striped-color: black;
     --bs-table-striped-bg: rgba(0, 0, 0, 0.05);
-    --bs-table-active-color: #919191;
+    --bs-table-active-color: black;
     --bs-table-active-bg: rgba(0, 0, 0, 0.1);
-    --bs-table-hover-color: #919191;
+    --bs-table-hover-color: black;
     --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
     width: 100%;
     margin-bottom: 1rem;
-    color: #919191;
+    color: black;
     vertical-align: top;
     border-color: #dee2e6
 }
@@ -2236,7 +2236,7 @@ progress {
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    color: #919191;
+    color: black;
     background-color: #fff;
     background-clip: padding-box;
     border: 1px solid #ced4da;
@@ -2266,7 +2266,7 @@ progress {
 }
 
 .form-control:focus {
-    color: #919191;
+    color: black;
     background-color: #fff;
     border-color: rgb(248.5, 197, 127.5);
     outline: 0;
@@ -2302,7 +2302,7 @@ progress {
     padding: .375rem .75rem;
     margin: -0.375rem -0.75rem;
     margin-inline-end: .75rem;
-    color: #919191;
+    color: black;
     background-color: #e9ecef;
     pointer-events: none;
     border-color: inherit;
@@ -2331,7 +2331,7 @@ progress {
     padding: .375rem .75rem;
     margin: -0.375rem -0.75rem;
     margin-inline-end: .75rem;
-    color: #919191;
+    color: black;
     background-color: #e9ecef;
     pointer-events: none;
     border-color: inherit;
@@ -2360,7 +2360,7 @@ progress {
     padding: .375rem 0;
     margin-bottom: 0;
     line-height: 1.5;
-    color: #919191;
+    color: black;
     background-color: rgba(0, 0, 0, 0);
     border: solid rgba(0, 0, 0, 0);
     border-width: 1px 0
@@ -2453,7 +2453,7 @@ textarea.form-control-lg {
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    color: #919191;
+    color: black;
     background-color: #fff;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
@@ -2484,7 +2484,7 @@ textarea.form-control-lg {
 
 .form-select:-moz-focusring {
     color: rgba(0, 0, 0, 0);
-    text-shadow: 0 0 0 #919191
+    text-shadow: 0 0 0 black
 }
 
 .form-select-sm {
@@ -2840,7 +2840,7 @@ textarea.form-control-lg {
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    color: #919191;
+    color: black;
     text-align: center;
     white-space: nowrap;
     background-color: #e9ecef;
@@ -3099,7 +3099,7 @@ textarea.form-control.is-invalid {
     display: inline-block;
     font-weight: 400;
     line-height: 1.5;
-    color: #919191;
+    color: black;
     text-align: center;
     vertical-align: middle;
     cursor: pointer;
@@ -3121,7 +3121,7 @@ textarea.form-control.is-invalid {
 }
 
 .btn:hover {
-    color: #919191
+    color: black
 }
 
 .btn-check:focus+.btn,
@@ -3910,7 +3910,7 @@ fieldset:disabled .btn {
     padding: .5rem 0;
     margin: 0;
     font-size: 1rem;
-    color: #919191;
+    color: black;
     text-align: left;
     list-style: none;
     background-color: #fff;
@@ -5053,7 +5053,7 @@ fieldset:disabled .btn {
     width: 100%;
     padding: 1rem 1.25rem;
     font-size: 1rem;
-    color: #919191;
+    color: black;
     text-align: left;
     background-color: #fff;
     border: 0;
@@ -5505,7 +5505,7 @@ fieldset:disabled .btn {
 }
 
 .list-group-item-action:active {
-    color: #919191;
+    color: black;
     background-color: #e9ecef
 }
 
@@ -6579,7 +6579,7 @@ fieldset:disabled .btn {
 
 .popover-body {
     padding: 1rem 1rem;
-    color: #919191
+    color: black
 }
 
 .carousel {
@@ -8380,7 +8380,7 @@ fieldset:disabled .btn {
 }
 
 .text-body {
-    color: #919191 !important
+    color: black !important
 }
 
 .text-muted {
