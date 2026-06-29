@@ -75,7 +75,7 @@ export default function Footer() {
                             <div className="footer-item d-flex flex-column">
                                 <div className="footer-item">
                                     <h4 className="text-light mb-4">{settingData.siteName}</h4>
-                                    <p className="mb-3">ShopMart is your trusted online shopping destination, offering quality products, great deals, and a seamless shopping experience. We bring convenience, value, and satisfaction right to your doorstep.</p>
+                                    <p className="mb-3 text-light">ShopMart is your trusted online shopping destination, offering quality products, great deals, and a seamless shopping experience. We bring convenience, value, and satisfaction right to your doorstep.</p>
                                     <div className="position-relative mx-auto rounded-pill">
                                         <input className="form-control rounded-pill w-100 py-3 ps-4 pe-5" type="text"
                                             placeholder="Enter your email" />
@@ -84,32 +84,32 @@ export default function Footer() {
                                     </div>
                                 </div>
                                 <div className='mt-3'>
-                                    <a href={settingData.facebook} target='_blank' className=" me-2"> <i className='fs-3 me-2 bi bi-facebook'></i></a>
-                                    <a href={settingData.twitter} target='_blank' className=" me-2"> <i className='fs-3 me-2 bi bi-twitter'></i></a>
-                                    <a href={settingData.youtube} target='_blank' className=" me-2"> <i className='fs-3 me-2 bi bi-youtube'></i></a>
-                                    <a href={settingData.linkedin} target='_blank' className=" me-2"> <i className='fs-3 me-2 bi bi-linkedin'></i></a>
-                                    <a href={settingData.instagram} target='_blank' className=" me-2"> <i className='fs-3 me-2 bi bi-instagram'></i></a>
+                                    <a href={settingData.facebook} target='_blank' className="text-light me-2"> <i className='fs-3 me-2 bi bi-facebook'></i></a>
+                                    <a href={settingData.twitter} target='_blank' className="text-light me-2"> <i className='fs-3 me-2 bi bi-twitter'></i></a>
+                                    <a href={settingData.youtube} target='_blank' className="text-light me-2"> <i className='fs-3 me-2 bi bi-youtube'></i></a>
+                                    <a href={settingData.linkedin} target='_blank' className="text-light me-2"> <i className='fs-3 me-2 bi bi-linkedin'></i></a>
+                                    <a href={settingData.instagram} target='_blank' className="text-light me-2"> <i className='fs-3 me-2 bi bi-instagram'></i></a>
                                 </div>
                             </div>
                         </div>
                         <div className="col-md-6 col-lg-6 col-xl-3">
                             <div className="footer-item d-flex flex-column">
                                 <h4 className="text-light mb-4">Quick Links</h4>
-                                <Link to="/" className=""><i className="fas fa-angle-right me-2"></i> Home</Link>
-                                <Link to="/about" className=""><i className="fas fa-angle-right me-2"></i> About</Link>
-                                <Link to="/shop" className=""><i className="fas fa-angle-right me-2"></i> Shop</Link>
-                                <Link to="/testimonial" className=""><i className="fas fa-angle-right me-2"></i> Testimonials</Link>
-                                <Link to="/contact" className=""><i className="fas fa-angle-right me-2"></i> Contact Us</Link>
+                                <Link to="/" className="text-light"><i className="fas fa-angle-right me-2"></i> Home</Link>
+                                <Link to="/about" className="text-light"><i className="fas fa-angle-right me-2"></i> About</Link>
+                                <Link to="/shop" className="text-light"><i className="fas fa-angle-right me-2"></i> Shop</Link>
+                                <Link to="/testimonial" className="text-light"><i className="fas fa-angle-right me-2"></i> Testimonials</Link>
+                                <Link to="/contact" className="text-light"><i className="fas fa-angle-right me-2"></i> Contact Us</Link>
                             </div>
                         </div>
                         <div className="col-md-6 col-lg-6 col-xl-3">
                             <div className="footer-item d-flex flex-column">
                                 <h4 className="text-light mb-4">Other Links</h4>
-                                <Link to="/feature" className=""><i className="fas fa-angle-right me-2"></i> Features</Link>
-                                <Link to="/faq" className=""><i className="fas fa-angle-right me-2"></i> Faq</Link>
-                                <Link to="/privacy-policy" className=""><i className="fas fa-angle-right me-2"></i> Privacy Policy</Link>
-                                <Link to="/tc" className=""><i className="fas fa-angle-right me-2"></i> Terms & Conditions</Link>
-                                <Link to="/refund-policy" className=""><i className="fas fa-angle-right me-2"></i> Return and Refund Policy</Link>
+                                <Link to="/feature" className="text-light"><i className="fas fa-angle-right me-2"></i> Features</Link>
+                                <Link to="/faq" className="text-light"><i className="fas fa-angle-right me-2"></i> Faq</Link>
+                                <Link to="/privacy-policy" className="text-light"><i className="fas fa-angle-right me-2"></i> Privacy Policy</Link>
+                                <Link to="/tc" className="text-light"><i className="fas fa-angle-right me-2"></i> Terms & Conditions</Link>
+                                <Link to="/refund-policy" className="text-light"><i className="fas fa-angle-right me-2"></i> Return and Refund Policy</Link>
                             </div>
                         </div>
                     </div>
