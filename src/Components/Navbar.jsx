@@ -1,6 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+
+import { getSetting } from "../Redux/ActionCreators/SettingActionCreators"
+import { getMaincategory } from "../Redux/ActionCreators/MaincategoryActionCreators"
 export default function Navbar() {
   let [settingData, setSettingData] = useState({
     siteName: import.meta.env.VITE_APP_SITE_NAME,
@@ -15,6 +19,29 @@ export default function Navbar() {
     linkedin: import.meta.env.VITE_APP_LINKEDIN,
     instagram: import.meta.env.VITE_APP_INSTAGRAM,
   })
+
+  let SettingStateData = useSelector(state => state.SettingStateData)
+  let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
+  let dispatch = useDispatch()
+
+  useEffect(() => {
+    (() => {
+      dispatch(getSetting())
+      if (SettingStateData.length) {
+        setSettingData(() => {
+          let item = {}
+          Object.keys(settingData).map(key => item[key] = SettingStateData[0][key] || settingData[key])
+          return item
+        })
+      }
+    })()
+  }, [SettingStateData.length])
+
+  useEffect(() => {
+    (() => {
+      dispatch(getMaincategory())
+    })()
+  }, [MaincategoryStateData.length])
   return (
     <>
       <div className="container-fluid px-5 border-bottom">
@@ -76,9 +103,9 @@ export default function Navbar() {
           <div className="col-md-4 col-lg-6 text-center">
             <div className="position-relative ps-4">
               <div className="d-flex border rounded-pill">
-                <input className="form-control border-primary outline-primary w-100 py-3" style={{borderRadius:"30px 0 0 30px"}} type="text"
+                <input className="form-control border-primary outline-primary w-100 py-3" style={{ borderRadius: "30px 0 0 30px" }} type="text"
                   data-bs-target="#dropdownToggle123" placeholder="Search Looking For?" />
-                <button type="button" className="btn btn-primary py-3 px-5"  style={{borderRadius:"0 30px 30px 0"}} ><i
+                <button type="button" className="btn btn-primary py-3 px-5" style={{ borderRadius: "0 30px 30px 0" }} ><i
                   className="fas fa-search"></i></button>
               </div>
             </div>
@@ -99,41 +126,18 @@ export default function Navbar() {
             <nav className="navbar navbar-light position-relative" style={{ width: "250px" }}>
               <button className="navbar-toggler border-0 fs-4 w-100 px-0 text-start" type="button"
                 data-bs-toggle="collapse" data-bs-target="#allCat">
-                <h4 className="m-0 text-light"><i className="fa fa-bars me-2"></i>Categories</h4>
+                <h4 className="m-0 text-light"><i className="fa fa-bars me-2"></i>Main Categories</h4>
               </button>
               <div className="collapse navbar-collapse rounded-bottom" id="allCat">
                 <div className="navbar-nav ms-auto py-0">
                   <ul className="list-unstyled categories-bars">
-                    <li>
-                      <div className="categories-bars-item">
-                        <a href="#">Accessories</a>
-                        <span>(3)</span>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="categories-bars-item">
-                        <a href="#">Electronics & Computer</a>
-                        <span>(5)</span>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="categories-bars-item">
-                        <a href="#">Laptops & Desktops</a>
-                        <span>(2)</span>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="categories-bars-item">
-                        <a href="#">Mobiles & Tablets</a>
-                        <span>(8)</span>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="categories-bars-item">
-                        <a href="#">SmartPhone & Smart TV</a>
-                        <span>(5)</span>
-                      </div>
-                    </li>
+                    {MaincategoryStateData.filter(x => x.status).map((item, index) => {
+                      return <li key={index}>
+                        <div className="categories-bars-item">
+                          <Link to={`/shop?mc=${item.name}`}>{item.name}</Link>
+                        </div>
+                      </li>
+                    })}
                   </ul>
                 </div>
               </div>

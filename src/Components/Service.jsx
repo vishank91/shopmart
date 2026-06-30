@@ -10,7 +10,7 @@ export default function Service() {
                             <i className="fa fa-sync-alt fa-2x text-primary"></i>
                             <div className="ms-4">
                                 <h6 className="text-uppercase mb-2">Free Return</h6>
-                                <p className="mb-0">30 days money back guarantee!</p>
+                                <p className="mb-0">15 days money back guarantee!</p>
                             </div>
                         </div>
                     </div>
@@ -65,7 +65,7 @@ export default function Service() {
                             <i className="fas fa-blog fa-2x text-primary"></i>
                             <div className="ms-4">
                                 <h6 className="text-uppercase mb-2">Online Service</h6>
-                                <p className="mb-0">Free return products in 30 days</p>
+                                <p className="mb-0">Free return products in 15 days</p>
                             </div>
                         </div>
                     </div>

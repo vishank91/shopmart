@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay } from 'swiper/modules';
 import "swiper/css";
@@ -11,6 +14,8 @@ import ProductSlider from '../Components/ProductSlider'
 import BestSellerProducts from '../Components/BestSellerProducts'
 
 
+import { getMaincategory } from "../Redux/ActionCreators/MaincategoryActionCreators"
+import { getProduct } from "../Redux/ActionCreators/ProductActionCreators"
 export default function HomePage() {
   let sliderOptions = {
     loop: true,
@@ -20,6 +25,26 @@ export default function HomePage() {
     },
     modules: [Autoplay]
   }
+  let [data, setData] = useState({pic:[]})
+
+  let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
+  let ProductStateData = useSelector(state => state.ProductStateData)
+  let dispatch = useDispatch()
+
+  useEffect(() => {
+    (() => {
+      dispatch(getMaincategory())
+    })()
+  }, [MaincategoryStateData.length])
+
+  useEffect(() => {
+    (() => {
+      dispatch(getProduct())
+      if (ProductStateData.length) {
+        setData(ProductStateData[0])
+      }
+    })()
+  }, [ProductStateData.length])
   return (
     <>
       <div className="container-fluid carousel bg-light px-0">
@@ -34,12 +59,12 @@ export default function HomePage() {
                     </div>
                     <div className="col-xl-6 carousel-content p-4">
                       <h4 className="text-uppercase fw-bold mb-4 wow fadeInRight" data-wow-delay="0.1s"
-                        style={{ letterSpacing: "3px" }}>Save Up To A $400</h4>
+                        style={{ letterSpacing: "3px" }}>Save Up To 90%</h4>
                       <h1 className="display-3 text-capitalize mb-4 wow fadeInRight" data-wow-delay="0.3s">On Selected
-                        Laptops & Desktop Or Smartphone</h1>
+                        Electronics Products</h1>
                       <p className="text-dark wow fadeInRight" data-wow-delay="0.5s">Terms and Condition Apply</p>
-                      <a className="btn btn-primary rounded-pill py-3 px-5 wow fadeInRight" data-wow-delay="0.7s"
-                        href="#">Shop Now</a>
+                      <Link className="btn btn-primary rounded-pill py-3 px-5 wow fadeInRight" data-wow-delay="0.7s"
+                        to="/shop">Shop Now</Link>
                     </div>
                   </div>
                 </SwiperSlide>
@@ -50,12 +75,12 @@ export default function HomePage() {
                     </div>
                     <div className="col-xl-6 carousel-content p-4">
                       <h4 className="text-uppercase fw-bold mb-4 wow fadeInRight" data-wow-delay="0.1s"
-                        style={{ letterSpacing: "3px" }}>Save Up To A $200</h4>
+                        style={{ letterSpacing: "3px" }}>Save Up To 95%</h4>
                       <h1 className="display-3 text-capitalize mb-4 wow fadeInRight" data-wow-delay="0.3s">On Selected
-                        Laptops & Desktop Or Smartphone</h1>
+                        Top brand Cloths and Other Products</h1>
                       <p className="text-dark wow fadeInRight" data-wow-delay="0.5s">Terms and Condition Apply</p>
-                      <a className="btn btn-primary rounded-pill py-3 px-5 wow fadeInRight" data-wow-delay="0.7s"
-                        href="#">Shop Now</a>
+                      <Link className="btn btn-primary rounded-pill py-3 px-5 wow fadeInRight" data-wow-delay="0.7s"
+                        to="/shop">Shop Now</Link>
                     </div>
                   </div>
                 </SwiperSlide>
@@ -64,20 +89,20 @@ export default function HomePage() {
           </div>
           <div className="col-12 col-lg-5 col-xl-3 wow fadeInRight" data-wow-delay="0.1s">
             <div className="carousel-header-banner h-100">
-              <img src="img/header-img.jpg" className="img-fluid w-100 h-100" style={{ objectFit: "cover" }} alt="Image" />
+              <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}${data.pic[0]}`} className="img-fluid w-100 h-100" style={{ objectFit: "cover" }} alt="Image" />
               <div className="carousel-banner-offer">
-                <p className="bg-primary text-white rounded fs-5 py-2 px-4 mb-0 me-3">Save $48.00</p>
-                <p className="text-primary fs-5 fw-bold mb-0">Special Offer</p>
+                <p className="bg-primary text-white rounded fs-5 py-2 px-4 mb-0 me-3">Save &#8377;{data.basePrice - data.finalPrice}</p>
+                <p className="text-light fs-5 fw-bold mb-0">{data.discount}% Off</p>
               </div>
               <div className="carousel-banner">
                 <div className="carousel-banner-content text-center p-4">
-                  <a href="#" className="d-block mb-2">SmartPhone</a>
-                  <a href="#" className="d-block text-white fs-3">Apple iPad Mini <br /> G2356</a>
-                  <del className="me-2 text-white fs-5">$1,250.00</del>
-                  <span className="text-primary fs-5">$1,050.00</span>
+                  <Link to={`/shop?mc=${data?.maincategory}`} className="text-light d-block mb-2">{data?.maincategory}</Link>
+                  <Link to={`/product/${data.id}`} className="d-block text-white fs-3">{data.name}</Link>
+                  <del className="me-2 text-white fs-5">&#8377;{data.basePrice}</del>
+                  <span className="text-light fs-5">&#8377;{data.finalPrice}</span>
                 </div>
-                <a href="#" className="btn btn-primary rounded-pill py-2 px-4"><i
-                  className="fas fa-shopping-cart me-2"></i> Add To Cart</a>
+                <Link to={`/product/${data.id}`} className="btn btn-primary rounded-pill py-2 px-4"><i
+                  className="fas fa-shopping-cart me-2"></i> Add To Cart</Link>
               </div>
             </div>
           </div>
@@ -85,7 +110,7 @@ export default function HomePage() {
       </div>
       <Service />
       <Offer />
-      <Products />
+      <Products maincategory={MaincategoryStateData.filter(x => x.status)} data={ProductStateData.filter(x => x.status)} />
       <SaleBanner />
       <ProductSlider />
       <BestSellerProducts />
