@@ -17,6 +17,8 @@ import BestSellerProducts from '../Components/BestSellerProducts'
 import { getMaincategory } from "../Redux/ActionCreators/MaincategoryActionCreators"
 import { getProduct } from "../Redux/ActionCreators/ProductActionCreators"
 export default function HomePage() {
+  let [maincategory, setMaincategory] = useState([])
+
   let sliderOptions = {
     loop: true,
     autoplay: {
@@ -25,7 +27,7 @@ export default function HomePage() {
     },
     modules: [Autoplay]
   }
-  let [data, setData] = useState({pic:[]})
+  let [data, setData] = useState({ pic: [] })
 
   let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
   let ProductStateData = useSelector(state => state.ProductStateData)
@@ -34,8 +36,11 @@ export default function HomePage() {
   useEffect(() => {
     (() => {
       dispatch(getMaincategory())
+      if (MaincategoryStateData.length && ProductStateData.length) {
+        setMaincategory(MaincategoryStateData.filter(x => x.status && ProductStateData.filter(p => p.status && p.maincategory === x.name).length))
+      }
     })()
-  }, [MaincategoryStateData.length])
+  }, [MaincategoryStateData.length, ProductStateData.length])
 
   useEffect(() => {
     (() => {
@@ -110,10 +115,12 @@ export default function HomePage() {
       </div>
       <Service />
       <Offer />
-      <Products maincategory={MaincategoryStateData.filter(x => x.status)} data={ProductStateData.filter(x => x.status)} />
+      <Products maincategory={maincategory} data={ProductStateData.filter(x => x.status)} />
       <SaleBanner />
-      <ProductSlider />
-      <BestSellerProducts />
+      {maincategory.map(item => {
+        return <ProductSlider key={item.id} maincategory={item.name} data={ProductStateData.filter(p => p.status && p.maincategory === item.name)} />
+      })}
+      <BestSellerProducts data={ProductStateData.filter(x => x.status).slice(0, 24)} />
     </>
   )
 }

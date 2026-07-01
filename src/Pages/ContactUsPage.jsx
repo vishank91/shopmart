@@ -1,5 +1,6 @@
 import React from 'react'
 import Breadcrum from '../Components/Breadcrum'
+import ContactDetails from '../Components/ContactDetails'
 
 export default function ContactUsPage() {
     return (
@@ -76,58 +77,7 @@ export default function ContactUsPage() {
                                         loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                                 </div>
                             </div>
-                            <div className="col-lg-12">
-                                <div className="row g-4 align-items-center justify-content-center">
-                                    <div className="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
-                                        <div className="rounded p-4">
-                                            <div className="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
-                                                style={{ width: "70px", height: "70px" }}>
-                                                <i className="fas fa-map-marker-alt fa-2x text-primary"></i>
-                                            </div>
-                                            <div>
-                                                <h4>Address</h4>
-                                                <p className="mb-2">123 Street New York.USA</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.3s">
-                                        <div className="rounded p-4">
-                                            <div className="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
-                                                style={{ width: "70px", height: "70px" }}>
-                                                <i className="fas fa-envelope fa-2x text-primary"></i>
-                                            </div>
-                                            <div>
-                                                <h4>Mail Us</h4>
-                                                <p className="mb-2">info@example.com</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.5s">
-                                        <div className="rounded p-4">
-                                            <div className="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
-                                                style={{ width: "70px", height: "70px" }}>
-                                                <i className="fa fa-phone-alt fa-2x text-primary"></i>
-                                            </div>
-                                            <div>
-                                                <h4>Telephone</h4>
-                                                <p className="mb-2">(+012) 3456 7890</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.7s">
-                                        <div className="rounded p-4">
-                                            <div className="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
-                                                style={{ width: "70px", height: "70px" }}>
-                                                <i className="fab fa-firefox-browser fa-2x text-primary"></i>
-                                            </div>
-                                            <div>
-                                                <h4>Yoursite@ex.com</h4>
-                                                <p className="mb-2">(+012) 3456 7890</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <ContactDetails/>
                         </div>
                     </div>
                 </div>

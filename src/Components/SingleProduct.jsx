@@ -8,7 +8,7 @@ export default function SingleProduct({ item }) {
                 <div className="product-item-inner border rounded">
                     <div className="product-item-inner-item">
                         <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}${item.pic[0]}`} style={{ height: 400 }} className="img-fluid w-100 rounded-top" alt="" />
-                        <div className="product-new">New</div>
+                        <div className="product-new">{item.brand}</div>
                         <div className="product-details">
                             <Link to={`/product/${item.id}`}><i className="fa fa-eye fa-1x"></i></Link>
                         </div>
