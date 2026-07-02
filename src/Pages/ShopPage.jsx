@@ -1,22 +1,44 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Breadcrum from '../Components/Breadcrum'
-import Service from '../Components/Service'
-import Offer from '../Components/Offer'
 import SaleBanner from '../Components/SaleBanner'
 
+import { getMaincategory } from "../Redux/ActionCreators/MaincategoryActionCreators"
+import { getSubcategory } from "../Redux/ActionCreators/SubcategoryActionCreators"
+import { getBrand } from "../Redux/ActionCreators/BrandActionCreators"
+import { getProduct } from "../Redux/ActionCreators/ProductActionCreators"
+import { useDispatch, useSelector } from 'react-redux'
 export default function ShopPage() {
+    let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
+    let SubcategoryStateData = useSelector(state => state.SubcategoryStateData)
+    let BrandStateData = useSelector(state => state.BrandStateData)
+    let ProductStateData = useSelector(state => state.ProductStateData)
+
+    let dispatch = useDispatch()
+
+    useEffect(() => {
+        (() => dispatch(getMaincategory()))()
+    }, [MaincategoryStateData.length])
+
+    useEffect(() => {
+        (() => dispatch(getSubcategory()))()
+    }, [SubcategoryStateData.length])
+
+    useEffect(() => {
+        (() => dispatch(getBrand()))()
+    }, [BrandStateData.length])
+
+    useEffect(() => {
+        (() => dispatch(getProduct()))()
+    }, [ProductStateData.length])
     return (
         <>
             <Breadcrum title="Shop" />
-            <Service />
-            <Offer />
-
             <div className="container-fluid shop py-5">
                 <div className="container py-5">
                     <div className="row g-4">
                         <div className="col-lg-3 wow fadeInUp" data-wow-delay="0.1s">
                             <div className="product-categories mb-4">
-                                <h4>Products Categories</h4>
+                                <h4>Maincategory</h4>
                                 <ul className="list-unstyled">
                                     <li>
                                         <div className="categories-item">
@@ -206,7 +228,7 @@ export default function ShopPage() {
                                 <img src="img/product-banner-3.jpg" className="img-fluid rounded w-100" style={{ height: "250px" }}
                                     alt="Image" />
                                 <div className="position-absolute rounded d-flex flex-column align-items-center justify-content-center text-center"
-                                    style={{width: "100%", height: "250px", top: "0", left: "0", background: "rgba(242, 139, 0, 0.3)"}}>
+                                    style={{ width: "100%", height: "250px", top: "0", left: "0", background: "rgba(242, 139, 0, 0.3)" }}>
                                     <h4 className="display-5 text-primary">SALE</h4>
                                     <h3 className="display-4 text-white mb-4">Get UP To 50% Off</h3>
                                     <a href="#" className="btn btn-primary rounded-pill">Shop Now</a>
@@ -1143,7 +1165,7 @@ export default function ShopPage() {
                     </div>
                 </div>
             </div>
-            <SaleBanner/>
+            <SaleBanner />
         </>
     )
 }

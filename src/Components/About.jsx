@@ -36,11 +36,11 @@ export default function About() {
             <p>At {settingData.siteName}, we believe online shopping should be simple, secure, and enjoyable for everyone. Our platform brings together a carefully selected collection of high-quality products across multiple categories, helping customers find everything they need in one convenient place. From fashion and electronics to home essentials and lifestyle products, we focus on offering excellent value without compromising quality. Every product is chosen with customer satisfaction in mind, while our intuitive website, secure payment options, and reliable delivery services ensure a seamless shopping experience from browsing to checkout.</p>
             <p>Customer satisfaction is at the heart of everything we do. Our dedicated team continuously works to expand our product selection, improve our services, and provide fast, dependable support whenever you need assistance. We value transparency, trust, and long-term relationships with our customers by offering competitive prices, genuine products, and hassle-free returns. As {settingData.siteName} continues to grow, our mission remains the same—to create an eCommerce platform where every customer can shop with confidence, enjoy outstanding service, and discover products that enhance their everyday lives while receiving the quality and convenience they deserve.</p>
             <div>
-              <a href={settingData.facebook} target='_blank' className=" me-2"> <i className='fs-3 text-primary bi bi-facebook'></i></a>
-              <a href={settingData.twitter} target='_blank' className=" me-2"> <i className='fs-3 text-primary bi bi-twitter'></i></a>
-              <a href={settingData.youtube} target='_blank' className=" me-2"> <i className='fs-3 text-primary bi bi-youtube'></i></a>
-              <a href={settingData.linkedin} target='_blank' className=" me-2"> <i className='fs-3 text-primary bi bi-linkedin'></i></a>
-              <a href={settingData.instagram} target='_blank' className=" me-2"> <i className='fs-3 text-primary bi bi-instagram'></i></a>
+              <a href={settingData.facebook} target='_blank' className=" me-2"> <i className='fs-3 text-secondary bi bi-facebook'></i></a>
+              <a href={settingData.twitter} target='_blank' className=" me-2"> <i className='fs-3 text-secondary bi bi-twitter'></i></a>
+              <a href={settingData.youtube} target='_blank' className=" me-2"> <i className='fs-3 text-secondary bi bi-youtube'></i></a>
+              <a href={settingData.linkedin} target='_blank' className=" me-2"> <i className='fs-3 text-secondary bi bi-linkedin'></i></a>
+              <a href={settingData.instagram} target='_blank' className=" me-2"> <i className='fs-3 text-secondary bi bi-instagram'></i></a>
             </div>
           </div>
           <div className="col-md-6">

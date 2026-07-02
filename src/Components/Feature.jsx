@@ -28,7 +28,7 @@ export default function Feature() {
     <>
       <div className="container my-5 py-5">
         <h1 className='text-center'>Why Shop With Confidence at {settingData.siteName}</h1>
-        <p>Discover a smarter way to shop with features designed to make every purchase simple, secure, and enjoyable. From premium product quality and fast delivery to secure payments and dedicated customer support, {settingData.siteName} is committed to providing a seamless online shopping experience that exceeds your expectations every time.</p>
+        <p className='text-center'>Discover a smarter way to shop with features designed to make every purchase simple, secure, and enjoyable. From premium product quality and fast delivery to secure payments and dedicated customer support, {settingData.siteName} is committed to providing a seamless online shopping experience that exceeds your expectations every time.</p>
         <div className='row my-5'>
           {FeatureStateData.filter(x => x.status).map(item => {
             return <div className='col-lg-4 col-md-6'>
