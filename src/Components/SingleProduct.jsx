@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export default function SingleProduct({ item }) {
+export default function SingleProduct({ item,title }) {
     return (
-        <div className="col-md-6 col-lg-4 col-xl-3">
+        <div className={`col-md-6 ${title && title==='shop'?'col-xl-4':'col-xl-3'}`}>
             <div className="product-item rounded wow fadeInUp" data-wow-delay="0.1s">
                 <div className="product-item-inner border rounded">
                     <div className="product-item-inner-item">
