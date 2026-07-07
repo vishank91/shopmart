@@ -4,12 +4,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import Breadcrum from '../Components/Breadcrum'
 import SaleBanner from '../Components/SaleBanner'
 
+import SingleProduct from '../Components/SingleProduct'
+import SingleProduct2 from '../Components/SingleProduct2'
+
 import { getMaincategory } from "../Redux/ActionCreators/MaincategoryActionCreators"
 import { getSubcategory } from "../Redux/ActionCreators/SubcategoryActionCreators"
 import { getBrand } from "../Redux/ActionCreators/BrandActionCreators"
 import { getProduct } from "../Redux/ActionCreators/ProductActionCreators"
-import SingleProduct from '../Components/SingleProduct'
-import SingleProduct2 from '../Components/SingleProduct2'
+
 
 const colors = ["Black", "White", "Blue", "Red", "Green", "Gray", "Pink", "Yellow", "Megenta", "Purple", "Orange", "N/A"]
 const sizes = ["XXL", "XL", "L", "MD", "SM", "XS", "NB", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40", "N/A"]
@@ -24,7 +26,73 @@ export default function ShopPage() {
     let [endIndex, setEndIndex] = useState(0)
     let [totalProducts, setTotalProducts] = useState(0)
 
+    let [selected, setSelected] = useState({
+        maincategory: [],
+        subcategory: [],
+        brand: [],
+        color: [],
+        size: [],
+    })
+    let [data, setData] = useState([])
+    let [sortFilter, setSortFilter] = useState("No Sort")
+    let [search, setSearch] = useState("")
+
     let dispatch = useDispatch()
+
+    function getInputSelected(key, value) {
+        let arr = selected[key]
+        if (arr.includes(value))
+            arr = arr.filter(x => x !== value)
+        else
+            arr.push(value)
+
+        setSelected({ ...selected, [key]: arr })
+        applySelectFilter({ ...selected, [key]: arr })
+    }
+
+    function applySearchFilter() {
+        let ch = search?.toLocaleLowerCase()
+        let items = ProductStateData.filter(x => x.status && (
+            (x.name?.toLocaleLowerCase()?.includes(ch)) ||
+            (x.maincategory?.toLocaleLowerCase() === ch) ||
+            (x.subcategory?.toLocaleLowerCase() === ch) ||
+            (x.brand?.toLocaleLowerCase() === ch) ||
+            (x.color?.includes(ch)) ||
+            (x.description?.toLocaleLowerCase()?.includes(ch))
+        ))
+        setTotalProducts(items.length)
+        setSelected({
+            maincategory: [],
+            subcategory: [],
+            brand: [],
+            color: [],
+            size: [],
+        })
+        applySortFilter(sortFilter, items)
+    }
+
+    function applySelectFilter(selected) {
+        let items = ProductStateData.filter(x => x.status && (
+            (selected.maincategory?.length === 0 || selected.maincategory?.includes(x.maincategory)) &&
+            (selected.subcategory?.length === 0 || selected.subcategory?.includes(x.subcategory)) &&
+            (selected.brand?.length === 0 || selected.brand?.includes(x.brand)) &&
+            (selected.color?.length === 0 || new Set(selected.color).intersection(new Set(x.color)).size > 0) &&
+            (selected.size?.length === 0 || new Set(selected.size).intersection(new Set(x.size)).size > 0)
+        ))
+        setTotalProducts(items.length)
+        setSearch("")
+        applySortFilter(sortFilter, items)
+    }
+
+    function applySortFilter(filter, data) {
+        if (filter === "Latest")
+            setData(data.sort((x, y) => y.id.localeCompare(x.id)))
+        else if (filter === "Price : Low to high")
+            setData(data.sort((x, y) => x.finalPrice - y.finalPrice))
+        else
+            setData(data.sort((x, y) => y.finalPrice - x.finalPrice))
+        setSortFilter(filter)
+    }
 
     useEffect(() => {
         (() => dispatch(getMaincategory()))()
@@ -42,7 +110,9 @@ export default function ShopPage() {
         (() => {
             dispatch(getProduct())
             if (ProductStateData.length) {
-                setTotalProducts(ProductStateData.filter(x => x.status).length)
+                let items = ProductStateData.filter(x => x.status)
+                setTotalProducts(items.length)
+                setData(items)
             }
         })()
     }, [ProductStateData.length])
@@ -64,8 +134,8 @@ export default function ShopPage() {
                                     {MaincategoryStateData.filter(x => x.status).map((item, index) => {
                                         return <li key={index}>
                                             <div className="d-flex">
-                                                <span className="btn btn-light w-100 text-start">{item.name}</span>
-                                                <i className='bi bi-check'></i>
+                                                <span onClick={() => getInputSelected('maincategory', item.name)} className="btn btn-light w-100 text-start">{item.name}</span>
+                                                {selected.maincategory.includes(item.name) ? <i className='bi bi-check'></i> : null}
                                             </div>
                                         </li>
                                     })}
@@ -77,8 +147,8 @@ export default function ShopPage() {
                                     {SubcategoryStateData.filter(x => x.status).map((item, index) => {
                                         return <li key={index}>
                                             <div className="d-flex">
-                                                <span className="btn btn-light w-100 text-start">{item.name}</span>
-                                                <i className='bi bi-check'></i>
+                                                <span onClick={() => getInputSelected('subcategory', item.name)} className="btn btn-light w-100 text-start">{item.name}</span>
+                                                {selected.subcategory.includes(item.name) ? <i className='bi bi-check'></i> : null}
                                             </div>
                                         </li>
                                     })}
@@ -90,8 +160,8 @@ export default function ShopPage() {
                                     {BrandStateData.filter(x => x.status).map((item, index) => {
                                         return <li key={index}>
                                             <div className="d-flex">
-                                                <span className="btn btn-light w-100 text-start">{item.name}</span>
-                                                <i className='bi bi-check'></i>
+                                                <span onClick={() => getInputSelected('brand', item.name)} className="btn btn-light w-100 text-start">{item.name}</span>
+                                                {selected.brand.includes(item.name) ? <i className='bi bi-check'></i> : null}
                                             </div>
                                         </li>
                                     })}
@@ -104,8 +174,8 @@ export default function ShopPage() {
                                     {colors.map((item, index) => {
                                         return <li key={index}>
                                             <div className="d-flex">
-                                                <span className="btn btn-light w-100 text-start">{item}</span>
-                                                <i className='bi bi-check'></i>
+                                                <span onClick={() => getInputSelected('color', item)} className="btn btn-light w-100 text-start">{item}</span>
+                                                {selected.color.includes(item) ? <i className='bi bi-check'></i> : null}
                                             </div>
                                         </li>
                                     })}
@@ -117,8 +187,8 @@ export default function ShopPage() {
                                     {sizes.map((item, index) => {
                                         return <li key={index}>
                                             <div className="d-flex">
-                                                <span className="btn btn-light w-100 text-start">{item}</span>
-                                                <i className='bi bi-check'></i>
+                                                <span onClick={() => getInputSelected('size', item)} className="btn btn-light w-100 text-start">{item}</span>
+                                                {selected.size.includes(item) ? <i className='bi bi-check'></i> : null}
                                             </div>
                                         </li>
                                     })}
@@ -128,22 +198,26 @@ export default function ShopPage() {
                         <div className="col-lg-9 wow fadeInUp" data-wow-delay="0.1s">
                             <div className="row g-4">
                                 <div className="col-xl-6">
-                                    <div className="input-group w-100 mx-auto d-flex">
-                                        <input type="search" className="form-control p-3" placeholder="keywords"
-                                            aria-describedby="search-icon-1" />
-                                        <span id="search-icon-1" className="input-group-text p-3"><i
-                                            className="fa fa-search"></i></span>
-                                    </div>
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault()
+                                        applySearchFilter()
+                                    }} >
+                                        <div className="input-group w-100 mx-auto d-flex">
+                                            <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} className="form-control p-3" placeholder="Search Products By Name, Category, Color etc"
+                                                aria-describedby="search-icon-1" />
+                                            <button type='submit' id="search-icon-1" className="input-group-text p-3"><i
+                                                className="fa fa-search"></i></button>
+                                        </div>
+                                    </form>
                                 </div>
                                 <div className="col-xl-4 text-end">
                                     <div className="bg-light ps-3 py-3 rounded d-flex justify-content-between">
                                         <label>Sort By:</label>
-                                        <select id="electronics" name="electronicslist"
+                                        <select id="electronics" onChange={(e) => applySortFilter(e.target.value, data)} name="electronicslist"
                                             className="border-0 form-select-sm bg-light me-3" form="electronicsform">
-                                            <option value="volvo">No Sort</option>
-                                            <option value="saab">Latest</option>
-                                            <option value="audio">Price : Low to high</option>
-                                            <option value="audi">Price : High to low</option>
+                                            <option>Latest</option>
+                                            <option>Price : Low to high</option>
+                                            <option>Price : High to low</option>
                                         </select>
                                     </div>
                                 </div>
@@ -165,14 +239,14 @@ export default function ShopPage() {
                             <div className="tab-content">
                                 <div id="tab-5" className="tab-pane fade show p-0 active">
                                     <div className="row g-4 product">
-                                        {ProductStateData.filter(x => x.status).slice(startIndex, endIndex).map(item => {
+                                        {data.slice(startIndex, endIndex).map(item => {
                                             return <SingleProduct title="shop" item={item} key={item.id} />
                                         })}
                                     </div>
                                 </div>
                                 <div id="tab-6" className="products tab-pane fade show p-0">
                                     <div className="row g-4 products-mini">
-                                        {ProductStateData.filter(x => x.status).slice(startIndex, endIndex).map(item => {
+                                        {data.slice(startIndex, endIndex).map(item => {
                                             return <div className="col-lg-6" key={item.id}>
                                                 <SingleProduct2 title="shop" item={item} />
                                             </div>
