@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export default function SingleProduct({ item,title }) {
+export default function SingleProduct({ item, title }) {
     return (
-        <div className={`col-md-6 ${title && title==='shop'?'col-xl-4':'col-xl-3'}`}>
+        <div className={`col-md-6 ${title && title === 'shop' ? 'col-xl-4' : 'col-xl-3'}`}>
             <div className="product-item rounded wow fadeInUp" data-wow-delay="0.1s">
                 <div className="product-item-inner border rounded">
                     <div className="product-item-inner-item">
@@ -14,8 +14,8 @@ export default function SingleProduct({ item,title }) {
                         </div>
                     </div>
                     <div className="text-center rounded-bottom p-4">
-                        <a href="#" className="d-block mb-2">{item.maincategory}/{item.subcategory}</a>
-                        <a href="#" className="d-block h4">{item.name}</a>
+                        <Link to={`/product/${item.id}`} className="d-block mb-2">{item.maincategory}/{item.subcategory}</Link>
+                        <Link to={`/product/${item.id}`} className="d-block h4">{item.name}</Link>
                         <del className="me-2 fs-5">&#8377;{item.basePrice}</del>
                         <span className="text-primary fs-5">&#8377;{item.finalPrice}</span>
                     </div>

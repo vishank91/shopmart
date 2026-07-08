@@ -36,6 +36,8 @@ export default function ShopPage() {
     let [data, setData] = useState([])
     let [sortFilter, setSortFilter] = useState("No Sort")
     let [search, setSearch] = useState("")
+    let [min, setMin] = useState(-1)
+    let [max, setMax] = useState(-1)
 
     let dispatch = useDispatch()
 
@@ -60,7 +62,6 @@ export default function ShopPage() {
             (x.color?.includes(ch)) ||
             (x.description?.toLocaleLowerCase()?.includes(ch))
         ))
-        setTotalProducts(items.length)
         setSelected({
             maincategory: [],
             subcategory: [],
@@ -79,20 +80,25 @@ export default function ShopPage() {
             (selected.color?.length === 0 || new Set(selected.color).intersection(new Set(x.color)).size > 0) &&
             (selected.size?.length === 0 || new Set(selected.size).intersection(new Set(x.size)).size > 0)
         ))
-        setTotalProducts(items.length)
         setSearch("")
         applySortFilter(sortFilter, items)
     }
 
     function applySortFilter(filter, data) {
+        if (min !== -1 && max !== -1)
+            data = data.filter(x => x.finalPrice >= min && x.finalPrice <= max)
         if (filter === "Latest")
             setData(data.sort((x, y) => y.id.localeCompare(x.id)))
         else if (filter === "Price : Low to high")
             setData(data.sort((x, y) => x.finalPrice - y.finalPrice))
         else
             setData(data.sort((x, y) => y.finalPrice - x.finalPrice))
+
+        setTotalProducts(data.length)
         setSortFilter(filter)
     }
+
+
 
     useEffect(() => {
         (() => dispatch(getMaincategory()))()
@@ -194,6 +200,27 @@ export default function ShopPage() {
                                     })}
                                 </ul>
                             </div>
+                            <div className="product-color mb-3">
+                                <h5>Filter By Price Range</h5>
+                                <form onSubmit={(e) => {
+                                    e.preventDefault()
+                                    applySortFilter(sortFilter, data)
+                                }}>
+                                    <div className="row">
+                                        <div className="col-6 mb-3">
+                                            <label>Min. Amount</label>
+                                            <input type="number" name="min" onChange={e => (setMin(e.target.value))} placeholder='Min. Amount' className='form-control border-primary' />
+                                        </div>
+                                        <div className="col-6 mb-3">
+                                            <label>Min. Amount</label>
+                                            <input type="number" name="max" onChange={e => (setMax(e.target.value))} placeholder='Max. Amount' className='form-control border-primary' />
+                                        </div>
+                                        <div className="col-12 mb-3">
+                                            <button type="submit" className='btn btn-primary w-100'>Apply Filter</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                         <div className="col-lg-9 wow fadeInUp" data-wow-delay="0.1s">
                             <div className="row g-4">
@@ -256,7 +283,7 @@ export default function ShopPage() {
                                 <div className="col-12 wow fadeInUp" data-wow-delay="0.1s">
                                     <div className="pagination d-flex justify-content-center mt-5">
                                         <a href="#" onClick={() => page > 1 ? setPage(page - 1) : null} className="rounded">&laquo;</a>
-                                        {Array.from({ length: (totalProducts / 24) + 1 }, (p, index) => (
+                                        {Array.from({ length: Math.floor((totalProducts / 24) + 1) }, (p, index) => (
                                             <a href="#" key={index} onClick={() => setPage(index + 1)} className={`rounded ${page === (index + 1) ? 'active' : ''}`}>{index + 1}</a>
                                         ))}
                                         <a href="#" onClick={() => page < totalProducts ? setPage(page + 1) : null} className="rounded">&raquo;</a>
