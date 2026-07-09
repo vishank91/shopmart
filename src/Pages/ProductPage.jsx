@@ -30,7 +30,16 @@ const sliderOptions = {
 export default function ProductPage() {
     let { id } = useParams()
 
-    let [data, setData] = useState({ pic: [] })
+    let [selected, setSelected] = useState({
+        color: "",
+        size: "",
+        quantity: 1
+    })
+    let [data, setData] = useState({
+        pic: [],
+        color: [],
+        size: []
+    })
     let [relatedProducts, setRelatedProducts] = useState([])
 
     let ProductStateData = useSelector(state => state.ProductStateData)
@@ -39,13 +48,23 @@ export default function ProductPage() {
     useEffect(() => {
         (() => {
             dispatch(getProduct())
-            if (ProductStateData.length) {
-                let item = ProductStateData.find(x => x.id === id)
-                setData({ ...item })
-                setRelatedProducts(ProductStateData.filter(x => x.maincategory === item.maincategory))
-            }
         })()
     }, [ProductStateData.length])
+
+    useEffect(() => {
+        (() => {
+            if (ProductStateData.length) {
+                let item = ProductStateData.find(x => x.id === id)
+                if (item) {
+                    setData({ ...item })
+                    setSelected({ ...selected, color: item.color[0], size: item.size[0] })
+                    setRelatedProducts(ProductStateData.filter(x => x.maincategory === item.maincategory))
+                }
+                else
+                    window.history.back()
+            }
+        })()
+    }, [ProductStateData.length, id])
     return (
         <>
             <Breadcrum title={data.name ? data.name : "Product"} />
@@ -64,17 +83,17 @@ export default function ProductPage() {
                                     </Swiper>
                                 </div>
                                 <div className="col-xl-6">
-                                    <h4 className="fw-bold mb-3">Smart Camera</h4>
-                                    <p className="mb-3">Category: Electronics</p>
-                                    <h5 className="fw-bold mb-3">3,35 $</h5>
-                                    <div className="d-flex mb-4">
+                                    <h4 className="fw-bold mb-3">{data.name}</h4>
+                                    <p className="mb-3">Category: {data.maincategory}/{data.subcategory}/{data.brand}</p>
+                                    <h5 className="fw-bold mb-3"><del>&#8377;{data.basePrice}</del> &#8377;{data.finalPrice} <sup>{data.discount}% Off</sup></h5>
+                                    {/* <div className="d-flex mb-4">
                                         <i className="fa fa-star text-secondary"></i>
                                         <i className="fa fa-star text-secondary"></i>
                                         <i className="fa fa-star text-secondary"></i>
                                         <i className="fa fa-star text-secondary"></i>
                                         <i className="fa fa-star"></i>
-                                    </div>
-                                    <div className="mb-3">
+                                    </div> */}
+                                    {/* <div className="mb-3">
                                         <div className="btn btn-primary d-inline-block rounded text-white py-1 px-4 me-2"><i
                                             className="fab fa-facebook-f me-1"></i> Share</div>
                                         <div className="btn btn-secondary d-inline-block rounded text-white py-1 px-4 ms-2"><i
@@ -83,27 +102,51 @@ export default function ProductPage() {
                                     <div className="d-flex flex-column mb-3">
                                         <small>Product SKU: N/A</small>
                                         <small>Available: <strong className="text-primary">20 items in stock</strong></small>
+                                    </div> */}
+                                    <p className="mb-4">{data.stock ? `${data.stockQuantity} Left In Stock` : 'Out Of Stock'}</p>
+                                    <div className='d-flex align-items-center mb-4'>
+                                        <h5>Color : </h5>
+                                        <div className='ms-4 btn-group'>
+                                            {data.color.map((item, index) => {
+                                                return <button
+                                                    key={index}
+                                                    onClick={() => setSelected({ ...selected, color: item })}
+                                                    className={`btn ${selected.color === item ? 'btn-primary' : 'btn-light'} border border-primary`}>{item}</button>
+                                            })}
+                                        </div>
                                     </div>
-                                    <p className="mb-4">The generated Lorem Ipsum is therefore always free from repetition injected
-                                        humour, or non-characteristic words etc.</p>
-                                    <p className="mb-4">Susp endisse ultricies nisi vel quam suscipit. Sabertooth peacock flounder;
-                                        chain pickerel hatchetfish, pencilfish snailfish</p>
-                                    <div className="input-group quantity mb-5" style={{ width: "100px" }}>
+                                    <div className='d-flex align-items-center mb-4'>
+                                        <h5>Size : </h5>
+                                        <div className='ms-4 btn-group'>
+                                            {data.size.map((item, index) => {
+                                                return <button
+                                                    key={index}
+                                                    onClick={() => setSelected({ ...selected, size: item })}
+                                                    className={`btn ${selected.size === item ? 'btn-primary' : 'btn-light'} border border-primary`}>{item}</button>
+                                            })}
+                                        </div>
+                                    </div>
+                                    <div className="input-group quantity mb-3" style={{ width: "100px" }}>
                                         <div className="input-group-btn">
-                                            <button className="btn btn-sm btn-minus rounded-circle bg-light border">
+                                            <button className="btn btn-sm btn-minus rounded-circle bg-light border" onClick={() => selected.quantity > 1 ? setSelected({ ...selected, quantity: selected.quantity - 1 }) : null}>
                                                 <i className="fa fa-minus"></i>
                                             </button>
                                         </div>
-                                        <input type="text" className="form-control form-control-sm text-center border-0" value="1" />
+                                        <input type="text" className="form-control form-control-sm text-center border-0" value={selected.quantity} />
                                         <div className="input-group-btn">
-                                            <button className="btn btn-sm btn-plus rounded-circle bg-light border">
+                                            <button className="btn btn-sm btn-plus rounded-circle bg-light border" onClick={() => selected.quantity < data.stockQuantity ? setSelected({ ...selected, quantity: selected.quantity + 1 }) : null}>
                                                 <i className="fa fa-plus"></i>
                                             </button>
                                         </div>
                                     </div>
-                                    <a href="#"
-                                        className="btn btn-primary border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i
-                                            className="fa fa-shopping-bag me-2 text-white"></i> Add to cart</a>
+                                    <div className='btn-group'>
+                                        <button className="btn btn-primary border px-4 py-2 mb-4 text-primary">
+                                            <i className="bi bi-cart-plus fs-5 me-2 text-white"></i> Add to cart
+                                        </button>
+                                        <button className="btn btn-success border px-4 py-2 mb-4 text-light">
+                                            <i className="bi bi-heart fs-5 me-2 text-white"></i> Add to Wishlist
+                                        </button>
+                                    </div>
                                 </div>
                                 <div className="col-lg-12">
                                     <nav>
@@ -119,31 +162,7 @@ export default function ProductPage() {
                                     <div className="tab-content mb-5">
                                         <div className="tab-pane active" id="nav-about" role="tabpanel"
                                             aria-labelledby="nav-about-tab">
-                                            <p>Our new <b className="fw-bold">HPB12 / A12 battery</b> is rated at 2000mAh and
-                                                designed to power up Black and Decker / FireStorm line of 12V tools allowing
-                                                users to run multiple devices off the same battery pack. The HPB12 is compatible
-                                                with the following Black and Decker power tool models:
-                                            </p>
-                                            <b className="fw-bold">Black & Decker Drills and Drivers:</b>
-                                            <p className="small">BD12PSK, BDG1200K, BDGL12K, BDID1202, CD1200SK, CD12SFK, CDC1200K,
-                                                CDC120AK, CDC120ASB, CP122K, CP122KB, CP12K, CP12KB, EPC12, EPC126, EPC126BK,
-                                                EPC12CA, EPC12CABK, HP122K, HP122KD, HP126F2B, HP126F2K, HP126F3B, HP126F3K,
-                                                HP126FBH, HP126FSC, HP126FSH, HP126K, HP128F3B, HP12K, HP12KD, HPD1200, HPD1202,
-                                                HPD1202KF, HPD12K-2, PS122K, PS122KB, PS12HAK, SS12, SX3000, SX3500, XD1200,
-                                                XD1200K, XTC121
-                                            </p>
-                                            <b className="fw-bold">lack & Decker Impact Wrenches:</b>
-                                            <p className="small">SX5000, XTC12IK, XTC12IKH</p>
-                                            <b className="fw-bold">Black & Decker Multi-Tools:</b>
-                                            <p className="small">KC2000FK</p>
-                                            <b className="fw-bold">Black & Decker Nailers:</b>
-                                            <p className="small">BDBN1202</p>
-                                            <b className="fw-bold">Black & Decker Screwdrivers:</b>
-                                            <p className="small">HP9019K</p>
-                                            <b className="fw-bold mb-0">Best replacement for the following Black and Decker OEM
-                                                battery part numbers:</b>
-                                            <p className="small">HPB12, A12, A12EX, A12-XJ, A1712, B-8315, BD1204L, BD-1204L,
-                                                BPT1047, FS120B, FS120BX, FSB12.</p>
+                                            <div dangerouslySetInnerHTML={{ __html: data.description }} />
                                         </div>
                                         <div className="tab-pane" id="nav-mission" role="tabpanel"
                                             aria-labelledby="nav-mission-tab">
@@ -198,44 +217,6 @@ export default function ProductPage() {
                                         </div>
                                     </div>
                                 </div>
-                                <form action="#">
-                                    <h4 className="mb-5 fw-bold">Leave a Reply</h4>
-                                    <div className="row g-4">
-                                        <div className="col-lg-6">
-                                            <div className="border-bottom rounded">
-                                                <input type="text" className="form-control border-0 me-4" placeholder="Yur Name *" />
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-6">
-                                            <div className="border-bottom rounded">
-                                                <input type="email" className="form-control border-0" placeholder="Your Email *" />
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-12">
-                                            <div className="border-bottom rounded my-4">
-                                                <textarea name="" id="" className="form-control border-0" cols="30" rows="8"
-                                                    placeholder="Your Review *" spellCheck="false"></textarea>
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-12">
-                                            <div className="d-flex justify-content-between py-3 mb-5">
-                                                <div className="d-flex align-items-center">
-                                                    <p className="mb-0 me-3">Please rate:</p>
-                                                    <div className="d-flex align-items-center" style={{ fontSize: "12px" }}>
-                                                        <i className="fa fa-star text-muted"></i>
-                                                        <i className="fa fa-star"></i>
-                                                        <i className="fa fa-star"></i>
-                                                        <i className="fa fa-star"></i>
-                                                        <i className="fa fa-star"></i>
-                                                    </div>
-                                                </div>
-                                                <a href="#"
-                                                    className="btn btn-primary border border-secondary text-primary rounded-pill px-4 py-3">
-                                                    Post Comment</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     </div>

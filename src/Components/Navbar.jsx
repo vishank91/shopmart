@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 
 import { getSetting } from "../Redux/ActionCreators/SettingActionCreators"
@@ -19,10 +19,18 @@ export default function Navbar() {
     linkedin: import.meta.env.VITE_APP_LINKEDIN,
     instagram: import.meta.env.VITE_APP_INSTAGRAM,
   })
+  let [search, setSearch] = useState("")
 
   let SettingStateData = useSelector(state => state.SettingStateData)
   let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
   let dispatch = useDispatch()
+
+  let navigate = useNavigate()
+
+  function postData(e) {
+    e.preventDefault()
+    navigate(`/shop?search=${search}`)
+  }
 
   useEffect(() => {
     (() => {
@@ -102,12 +110,14 @@ export default function Navbar() {
           </div>
           <div className="col-md-4 col-lg-6 text-center">
             <div className="position-relative ps-4">
-              <div className="d-flex border rounded-pill">
-                <input className="form-control border-primary outline-primary w-100 py-3" style={{ borderRadius: "30px 0 0 30px" }} type="text"
-                  data-bs-target="#dropdownToggle123" placeholder="Search Looking For?" />
-                <button type="button" className="btn btn-primary py-3 px-5" style={{ borderRadius: "0 30px 30px 0" }} ><i
-                  className="fas fa-search"></i></button>
-              </div>
+              <form onSubmit={postData}>
+                <div className="d-flex border rounded-pill">
+                  <input className="form-control border-primary outline-primary w-100 py-3" onChange={(e) => setSearch(e.target.value)} style={{ borderRadius: "30px 0 0 30px" }} type="text"
+                    data-bs-target="#dropdownToggle123" placeholder="Search Products by Name, Category , Color etc" />
+                  <button type="submit" className="btn btn-primary py-3 px-5" style={{ borderRadius: "0 30px 30px 0" }} ><i
+                    className="fas fa-search"></i></button>
+                </div>
+              </form>
             </div>
           </div>
           <div className="col-md-4 col-lg-3 text-center text-lg-end">

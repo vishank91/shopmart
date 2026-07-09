@@ -46,6 +46,8 @@ import AdminProductPage from './Pages/Admin/Product/AdminProductPage'
 import AdminProductCreatePage from './Pages/Admin/Product/AdminProductCreatePage'
 import AdminProductUpdatePage from './Pages/Admin/Product/AdminProductUpdatePage'
 
+import SignupPage from './Pages/User/SignupPage'
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -60,9 +62,12 @@ export default function App() {
         <Route path='/testimonial' element={<TestimonialPage />} />
         <Route path='/contact' element={<ContactUsPage />} />
 
+
         <Route path='/privacy-policy' element={<PrivacyPolicy />} />
         <Route path='/tc' element={<TermsAndConditions />} />
         <Route path='/refund-policy' element={<ReturnAndRefundPolicy />} />
+
+        <Route path='/signup' element={<SignupPage />} />
 
         {/* User Routes */}
         <Route path='/cart' element={<CartPage />} />
