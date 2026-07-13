@@ -27,6 +27,11 @@ export default function Navbar() {
 
   let navigate = useNavigate()
 
+  function logout() {
+    localStorage.clear()
+    navigate("/login")
+  }
+
   function postData(e) {
     e.preventDefault()
     navigate(`/shop?search=${search}`)
@@ -80,20 +85,23 @@ export default function Navbar() {
               <a href={settingData.youtube} target='_blank' className=" me-2"> <i className='bi bi-youtube'></i></a>
               <a href={settingData.linkedin} target='_blank' className=" me-2"> <i className='bi bi-linkedin'></i></a>
               <a href={settingData.instagram} target='_blank' className=" me-2"> <i className='bi bi-instagram'></i></a>
-              <div className="dropdown">
-                <a href="#" className="dropdown-toggle  ms-2" data-bs-toggle="dropdown"><small><i
-                  className="fa fa-home me-2"></i> Nitin Chauhan</small></a>
-                <div className="dropdown-menu rounded">
-                  <Link to="/profile?option=profile" className="dropdown-item"> Profile</Link>
-                  <Link to="/profile?option=profile" className="dropdown-item"> Admin Dashboard</Link>
-                  <Link to="/profile?option=wishlist" className="dropdown-item"> Wishlist</Link>
-                  <Link to="/profile?option=orders" className="dropdown-item"> Orders</Link>
-                  <Link to="/profile?option=address" className="dropdown-item"> Address</Link>
-                  <Link to="/cart" className="dropdown-item"> Cart</Link>
-                  <Link to="/checkout" className="dropdown-item"> Checkout</Link>
-                  <button className="dropdown-item"> Log Out</button>
-                </div>
-              </div>
+              {localStorage.getItem("login") ?
+                <div className="dropdown">
+                  <a href="#" className="dropdown-toggle  ms-2" data-bs-toggle="dropdown"><small><i
+                    className="fa fa-home me-2"></i> {localStorage.getItem("name")}</small></a>
+                  <div className="dropdown-menu rounded">
+                    <Link to="/profile?option=profile" className="dropdown-item"> Profile</Link>
+                    {localStorage.getItem("role") === "Buyer" ? null : <Link to="/profile?option=profile" className="dropdown-item"> Admin Dashboard</Link>}
+                    <Link to="/profile?option=wishlist" className="dropdown-item"> Wishlist</Link>
+                    <Link to="/profile?option=orders" className="dropdown-item"> Orders</Link>
+                    <Link to="/profile?option=address" className="dropdown-item"> Address</Link>
+                    <Link to="/cart" className="dropdown-item"> Cart</Link>
+                    <Link to="/checkout" className="dropdown-item"> Checkout</Link>
+                    <button onClick={logout} className="dropdown-item"> Log Out</button>
+                  </div>
+                </div> :
+                <Link to="/login" className=" me-2">Login</Link>
+              }
             </div>
           </div>
         </div>
@@ -186,36 +194,13 @@ export default function Navbar() {
                     <a href="#" className="nav-link  text-light dropdown-toggle" data-bs-toggle="dropdown">Category</a>
                     <div className="dropdown-menu m-0">
                       <ul className="list-unstyled categories-bars">
-                        <li>
-                          <div className="categories-bars-item">
-                            <a href="#">Accessories</a>
-                            <span>(3)</span>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="categories-bars-item">
-                            <a href="#">Electronics & Computer</a>
-                            <span>(5)</span>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="categories-bars-item">
-                            <a href="#">Laptops & Desktops</a>
-                            <span>(2)</span>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="categories-bars-item">
-                            <a href="#">Mobiles & Tablets</a>
-                            <span>(8)</span>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="categories-bars-item">
-                            <a href="#">SmartPhone & Smart TV</a>
-                            <span>(5)</span>
-                          </div>
-                        </li>
+                        {MaincategoryStateData.filter(x => x.status).map((item, index) => {
+                          return <li key={index}>
+                            <div className="categories-bars-item">
+                              <Link to={`/shop?mc=${item.name}`}>{item.name}</Link>
+                            </div>
+                          </li>
+                        })}
                       </ul>
                     </div>
                   </div>
