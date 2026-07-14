@@ -90,11 +90,11 @@ export default function Navbar() {
                   <a href="#" className="dropdown-toggle  ms-2" data-bs-toggle="dropdown"><small><i
                     className="fa fa-home me-2"></i> {localStorage.getItem("name")}</small></a>
                   <div className="dropdown-menu rounded">
-                    <Link to="/profile?option=profile" className="dropdown-item"> Profile</Link>
+                    <Link to="/profile?option=Profile" className="dropdown-item"> Profile</Link>
                     {localStorage.getItem("role") === "Buyer" ? null : <Link to="/profile?option=profile" className="dropdown-item"> Admin Dashboard</Link>}
-                    <Link to="/profile?option=wishlist" className="dropdown-item"> Wishlist</Link>
-                    <Link to="/profile?option=orders" className="dropdown-item"> Orders</Link>
-                    <Link to="/profile?option=address" className="dropdown-item"> Address</Link>
+                    <Link to="/profile?option=Wishlist" className="dropdown-item"> Wishlist</Link>
+                    <Link to="/profile?option=Orders" className="dropdown-item"> Orders</Link>
+                    <Link to="/profile?option=Address" className="dropdown-item"> Address</Link>
                     <Link to="/cart" className="dropdown-item"> Cart</Link>
                     <Link to="/checkout" className="dropdown-item"> Checkout</Link>
                     <button onClick={logout} className="dropdown-item"> Log Out</button>

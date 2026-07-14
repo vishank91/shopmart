@@ -62,8 +62,7 @@ export default function SignupPage() {
             return
         }
         // Till This Line
-
-        // let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/api/user`, {
+        
         response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/user`, {
             method: "POST",
             headers: {
