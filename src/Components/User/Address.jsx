@@ -14,6 +14,7 @@ const inputOptions = {
 export default function Address() {
   let [showModal, setShowModal] = useState(false)
   let [option, setOption] = useState({})
+  let [flag, setFlag] = useState(false)
 
   let [inputData, setInputData] = useState({ ...inputOptions })
 
@@ -28,17 +29,49 @@ export default function Address() {
     setInputData({ ...inputOptions })
   }
 
+  function update(index) {
+    setShowModal(true)
+    setOption({
+      type: "Update",
+      index: index
+    })
+    setInputData({ ...data.address[index] })
+  }
+
 
   function getInputData(e) {
     let { name, value } = e.target
     setInputData({ ...inputData, [name]: value })
   }
 
+  async function deleteRecord(index) {
+    if (window.confirm("Are You Sure You Want To Delete That Record")) {
+      data.address.splice(index, 1)
+      setData(data)
+
+      let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/user/${localStorage.getItem("userid")}`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json"
+        },
+        body: JSON.stringify({ ...data })
+      })
+      response = await response.json()
+
+
+      setFlag(!flag)
+    }
+  }
+
   async function postData(e) {
     e.preventDefault()
-    let address = data.address ?? []
-    address.push({ ...inputData })
-    setData({ ...data, address: address })
+    if (option.type === "Create") {
+      let address = data.address ?? []
+      address.push({ ...inputData })
+      setData({ ...data, address: address })
+    }
+    else
+      data.address[option.index] = { ...inputData }
 
     let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/user/${localStorage.getItem("userid")}`, {
       method: "PUT",
@@ -75,11 +108,15 @@ export default function Address() {
         </div>
         <div>
           {data.address.map((item, index) => {
-            return <div className='card p-3' key={index}>
+            return <div className='card p-3 w-75' key={index}>
               <p>{item.name}</p>
               <p>{item.email},{item.phone}</p>
               <p>{item.address}</p>
               <p>{item.pin},{item.city},{item.state}</p>
+              <div className='btn-group position-absolute end-0'>
+                <button className='btn btn-primary' onClick={() => update(index)}><i className='bi bi-pencil'></i></button>
+                <button className='btn btn-danger' onClick={() => deleteRecord(index)}><i className='bi bi-x'></i></button>
+              </div>
             </div>
           })}
         </div>

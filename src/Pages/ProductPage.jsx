@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCube, Pagination } from 'swiper/modules';
@@ -12,7 +12,8 @@ import Breadcrum from '../Components/Breadcrum'
 import ProductSlider from '../Components/ProductSlider'
 
 import { getProduct } from "../Redux/ActionCreators/ProductActionCreators"
-
+import { createCart, getCart } from "../Redux/ActionCreators/CartActionCreators"
+import { createWishlist, getWishlist } from "../Redux/ActionCreators/WishlistActionCreators"
 const sliderOptions = {
     effect: 'cube',
     grabCursor: true,
@@ -43,13 +44,71 @@ export default function ProductPage() {
     let [relatedProducts, setRelatedProducts] = useState([])
 
     let ProductStateData = useSelector(state => state.ProductStateData)
+    let CartStateData = useSelector(state => state.CartStateData)
+    let WishlistStateData = useSelector(state => state.WishlistStateData)
+
     let dispatch = useDispatch()
+    let navigate = useNavigate()
+
+    function addToCart() {
+        let item = CartStateData.find(x => x.product === id && x.user === localStorage.getItem("userid"))
+        if (!item) {
+            item = {
+                user: localStorage.getItem("userid"),
+                product: data.id,
+                quantity: selected.quantity,
+                color: selected.color,
+                size: selected.size,
+
+                //Remove Following Lines in Case Of Real Backend
+                name: data.name,
+                brand: data.brand,
+                stockQuantity: data.stockQuantity,
+                price: data.finalPrice,
+                pic: data.pic[0]
+            }
+            dispatch(createCart({ ...item }))
+        }
+        navigate("/cart")
+    }
+
+    function addToWishlist() {
+        let item = WishlistStateData.find(x => x.product === id && x.user === localStorage.getItem("userid"))
+        if (!item) {
+            item = {
+                user: localStorage.getItem("userid"),
+                product: data.id,
+                //Remove Following Lines in Case Of Real Backend
+                name: data.name,
+                brand: data.brand,
+                color: data.color,
+                size: data.size,
+                stockQuantity: data.stockQuantity,
+                price: data.finalPrice,
+                pic: data.pic[0]
+            }
+            dispatch(createWishlist({ ...item }))
+        }
+        navigate("/profile?option=Wishlist")
+    }
 
     useEffect(() => {
         (() => {
             dispatch(getProduct())
         })()
     }, [ProductStateData.length])
+
+    useEffect(() => {
+        (() => {
+            dispatch(getCart())
+        })()
+    }, [CartStateData.length])
+
+    useEffect(() => {
+        (() => {
+            dispatch(getWishlist())
+        })()
+    }, [WishlistStateData.length])
 
     useEffect(() => {
         (() => {
@@ -126,24 +185,26 @@ export default function ProductPage() {
                                             })}
                                         </div>
                                     </div>
-                                    <div className="input-group quantity mb-3" style={{ width: "100px" }}>
-                                        <div className="input-group-btn">
-                                            <button className="btn btn-sm btn-minus rounded-circle bg-light border" onClick={() => selected.quantity > 1 ? setSelected({ ...selected, quantity: selected.quantity - 1 }) : null}>
-                                                <i className="fa fa-minus"></i>
-                                            </button>
-                                        </div>
-                                        <input type="text" className="form-control form-control-sm text-center border-0" value={selected.quantity} />
-                                        <div className="input-group-btn">
-                                            <button className="btn btn-sm btn-plus rounded-circle bg-light border" onClick={() => selected.quantity < data.stockQuantity ? setSelected({ ...selected, quantity: selected.quantity + 1 }) : null}>
-                                                <i className="fa fa-plus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
+                                    {data.stock ?
+                                        <div className="input-group quantity mb-3" style={{ width: "100px" }}>
+                                            <div className="input-group-btn">
+                                                <button className="btn btn-sm btn-minus rounded-circle bg-light border" onClick={() => selected.quantity > 1 ? setSelected({ ...selected, quantity: selected.quantity - 1 }) : null}>
+                                                    <i className="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <input type="text" className="form-control form-control-sm text-center border-0" value={selected.quantity} />
+                                            <div className="input-group-btn">
+                                                <button className="btn btn-sm btn-plus rounded-circle bg-light border" onClick={() => selected.quantity < data.stockQuantity ? setSelected({ ...selected, quantity: selected.quantity + 1 }) : null}>
+                                                    <i className="fa fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div> : null}
                                     <div className='btn-group'>
-                                        <button className="btn btn-primary border px-4 py-2 mb-4 text-primary">
-                                            <i className="bi bi-cart-plus fs-5 me-2 text-white"></i> Add to cart
-                                        </button>
-                                        <button className="btn btn-success border px-4 py-2 mb-4 text-light">
+                                        {data.stock ?
+                                            <button className="btn btn-primary border px-4 py-2 mb-4 text-primary" onClick={addToCart}>
+                                                <i className="bi bi-cart-plus fs-5 me-2 text-white"></i> Add to cart
+                                            </button> : null}
+                                        <button className="btn btn-success border px-4 py-2 mb-4 text-light" onClick={addToWishlist}>
                                             <i className="bi bi-heart fs-5 me-2 text-white"></i> Add to Wishlist
                                         </button>
                                     </div>
