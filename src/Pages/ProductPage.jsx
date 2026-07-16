@@ -59,6 +59,7 @@ export default function ProductPage() {
                 quantity: selected.quantity,
                 color: selected.color,
                 size: selected.size,
+                total: selected.quantity*data.finalPrice,
 
                 //Remove Following Lines in Case Of Real Backend
                 name: data.name,

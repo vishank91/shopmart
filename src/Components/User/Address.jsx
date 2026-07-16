@@ -68,7 +68,7 @@ export default function Address() {
     if (option.type === "Create") {
       let address = data.address ?? []
       address.push({ ...inputData })
-      setData({ ...data, address: address })
+      data.address = address
     }
     else
       data.address[option.index] = { ...inputData }
@@ -82,6 +82,7 @@ export default function Address() {
     })
     response = await response.json()
     setShowModal(false)
+    setData(data)
     setInputData(inputOptions)
   }
 
@@ -107,7 +108,7 @@ export default function Address() {
           <button className='btn btn-primary' onClick={create}>Add New Address</button>
         </div>
         <div>
-          {data.address.map((item, index) => {
+          {data.address?.map((item, index) => {
             return <div className='card p-3 w-75' key={index}>
               <p>{item.name}</p>
               <p>{item.email},{item.phone}</p>

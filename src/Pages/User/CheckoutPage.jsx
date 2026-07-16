@@ -1,236 +1,155 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
 import Breadcrum from '../../Components/Breadcrum'
 
+import { getCart, deleteCart } from "../../Redux/ActionCreators/CartActionCreators"
+import { Link } from 'react-router-dom'
 export default function CheckoutPage() {
+    let [user, setUser] = useState({ address: [] })
+
+    let [data, setData] = useState([])
+    let [subtotal, setSubtotal] = useState(0)
+    let [shipping, setShipping] = useState(0)
+    let [total, setTotal] = useState(0)
+
+    let [selected, setSelected] = useState({
+        deliveryAddress: {},
+        paymentMode: "COD"
+    })
+
+    let CartStateData = useSelector(state => state.CartStateData)
+    let dispatch = useDispatch()
+
+    function calculate(cart) {
+        let sum = 0
+        cart.forEach(x => sum = sum + x.total)
+        if (sum > 0 && sum < 1000) {
+            setTotal(sum + 150)
+            setShipping(150)
+        }
+        else {
+            setTotal(sum)
+            setShipping(0)
+        }
+        setSubtotal(sum)
+    }
+    useEffect(() => {
+        (() => {
+            dispatch(getCart())
+            if (CartStateData.length) {
+                let cart = CartStateData.filter(x => x.user === localStorage.getItem("userid"))
+                setData(cart)
+                calculate(cart)
+            }
+        })()
+    }, [CartStateData.length])
+
+    useEffect(() => {
+        (async () => {
+            let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/user/${localStorage.getItem("userid")}`, {
+                method: "GET",
+                headers: {
+                    "content-type": "application/json"
+                }
+            })
+            response = await response.json()
+            setUser(response)
+            if (response.address)
+                setSelected({ ...selected, deliveryAddress: response.address[0] })
+        })()
+    }, [])
     return (
         <>
             <Breadcrum title="Checkout" />
             <div className="container-fluid bg-light overflow-hidden py-5">
                 <div className="container py-5">
-                    <h1 className="mb-4 wow fadeInUp" data-wow-delay="0.1s">Billing details</h1>
-                    <form action="#">
-                        <div className="row g-5">
-                            <div className="col-md-12 col-lg-6 col-xl-6 wow fadeInUp" data-wow-delay="0.1s">
-                                <div className="row">
-                                    <div className="col-md-12 col-lg-6">
-                                        <div className="form-item w-100">
-                                            <label className="form-label my-3">First Name<sup>*</sup></label>
-                                            <input type="text" className="form-control" />
-                                        </div>
+                    <div className="row g-5">
+                        <div className="col-lg-6 col-xl-6 wow fadeInUp" data-wow-delay="0.3s">
+                            <h3 className="mb-4 wow fadeInUp" data-wow-delay="0.1s">Billing Address</h3>
+                            {data.address?.length !== 0 ?
+                                user.address?.map((item, index) => {
+                                    return <div key={index} className='card p-3 mb-3' onClick={() => setSelected({ ...selected, deliveryAddress: item })}>
+                                        <h6>{item.name}</h6>
+                                        <p>{item.phone},{item.email}</p>
+                                        <p>{item.address}</p>
+                                        <p>{item.pin},{item.city},{item.state}</p>
+                                        {selected.deliveryAddress.address === item.address ? <i className='bi bi-check fs-3 m-3 position-absolute end-0'></i> : null}
                                     </div>
-                                    <div className="col-md-12 col-lg-6">
-                                        <div className="form-item w-100">
-                                            <label className="form-label my-3">Last Name<sup>*</sup></label>
-                                            <input type="text" className="form-control" />
-                                        </div>
-                                    </div>
+                                }) :
+                                <div className='card p-5 text-center'>
+                                    <h3>Delivery Address Not Found</h3>
+                                    <h4>Please Create atleast One Delivery Address</h4>
+                                    <Link to="/profile?option=Address" className='btn btn-primary w-100 m-auto'>Create Address</Link>
                                 </div>
-                                <div className="form-item">
-                                    <label className="form-label my-3">Company Name<sup>*</sup></label>
-                                    <input type="text" className="form-control" />
-                                </div>
-                                <div className="form-item">
-                                    <label className="form-label my-3">Address <sup>*</sup></label>
-                                    <input type="text" className="form-control" placeholder="House Number Street Name" />
-                                </div>
-                                <div className="form-item">
-                                    <label className="form-label my-3">Town/City<sup>*</sup></label>
-                                    <input type="text" className="form-control" />
-                                </div>
-                                <div className="form-item">
-                                    <label className="form-label my-3">Country<sup>*</sup></label>
-                                    <input type="text" className="form-control" />
-                                </div>
-                                <div className="form-item">
-                                    <label className="form-label my-3">Postcode/Zip<sup>*</sup></label>
-                                    <input type="text" className="form-control" />
-                                </div>
-                                <div className="form-item">
-                                    <label className="form-label my-3">Mobile<sup>*</sup></label>
-                                    <input type="tel" className="form-control" />
-                                </div>
-                                <div className="form-item">
-                                    <label className="form-label my-3">Email Address<sup>*</sup></label>
-                                    <input type="email" className="form-control" />
-                                </div>
-                                <div className="form-check my-3">
-                                    <input type="checkbox" className="form-check-input" id="Account-1" name="Accounts"
-                                        value="Accounts" />
-                                    <label className="form-check-label" for="Account-1">Create an account?</label>
-                                </div>
-                                <hr />
-                                <div className="form-check my-3">
-                                    <input className="form-check-input" type="checkbox" id="Address-1" name="Address"
-                                        value="Address" />
-                                    <label className="form-check-label" for="Address-1">Ship to a different address?</label>
-                                </div>
-                                <div className="form-item">
-                                    <textarea name="text" className="form-control" spellcheck="false" cols="30" rows="11"
-                                        placeholder="Oreder Notes (Optional)"></textarea>
-                                </div>
-                            </div>
-                            <div className="col-md-12 col-lg-6 col-xl-6 wow fadeInUp" data-wow-delay="0.3s">
-                                <div className="table-responsive">
-                                    <table className="table">
-                                        <thead>
-                                            <tr className="text-center">
-                                                <th scope="col" className="text-start">Name</th>
-                                                <th scope="col">Model</th>
-                                                <th scope="col">Price</th>
-                                                <th scope="col">Quantity</th>
-                                                <th scope="col">Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr className="text-center">
-                                                <th scope="row" className="text-start py-4">
-                                                    Apple iPad Mini
-                                                </th>
-                                                <td className="py-4">G2356</td>
-                                                <td className="py-4">$269.00</td>
-                                                <td className="py-4 text-center">2</td>
-                                                <td className="py-4">$538.00</td>
-                                            </tr>
-                                            <tr className="text-center">
-                                                <th scope="row" className="text-start py-4">
-                                                    Apple iPad Mini
-                                                </th>
-                                                <td className="py-4">G2356</td>
-                                                <td className="py-4">$269.00</td>
-                                                <td className="py-4">2</td>
-                                                <td className="py-4">$538.00</td>
-                                            </tr>
-                                            <tr className="text-center">
-                                                <th scope="row" className="text-start py-4">
-                                                    Apple iPad Mini
-                                                </th>
-                                                <td className="py-4">G2356</td>
-                                                <td className="py-4">$269.00</td>
-                                                <td className="py-4">2</td>
-                                                <td className="py-4">$538.00</td>
-                                            </tr>
-                                            <tr className="text-center">
-                                                <th scope="row" className="text-start py-4">
-                                                    Apple iPad Mini
-                                                </th>
-                                                <td className="py-4">G2356</td>
-                                                <td className="py-4">$269.00</td>
-                                                <td className="py-4">2</td>
-                                                <td className="py-4">$538.00</td>
-                                            </tr>
-                                            <tr className="text-center">
-                                                <th scope="row" className="text-start py-4">
-                                                    Apple iPad Mini
-                                                </th>
-                                                <td className="py-4">G2356</td>
-                                                <td className="py-4">$269.00</td>
-                                                <td className="py-4">2</td>
-                                                <td className="py-4">$538.00</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">
-                                                </th>
-                                                <td className="py-4"></td>
-                                                <td className="py-4"></td>
-                                                <td className="py-4">
-                                                    <p className="mb-0 text-dark py-2">Subtotal</p>
-                                                </td>
-                                                <td className="py-4">
-                                                    <div className="py-2 text-center border-bottom border-top">
-                                                        <p className="mb-0 text-dark">$1134.00</p>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">
-                                                </th>
-                                                <td className="py-4">
-                                                    <p className="mb-0 text-dark py-4">Shipping</p>
-                                                </td>
-                                                <td colspan="3" className="py-4">
-                                                    <div className="form-check text-start">
-                                                        <input type="checkbox" className="form-check-input bg-primary border-0"
-                                                            id="Shipping-1" name="Shipping-1" value="Shipping" />
-                                                        <label className="form-check-label" for="Shipping-1">Free Shipping</label>
-                                                    </div>
-                                                    <div className="form-check text-start">
-                                                        <input type="checkbox" className="form-check-input bg-primary border-0"
-                                                            id="Shipping-2" name="Shipping-1" value="Shipping" />
-                                                        <label className="form-check-label" for="Shipping-2">Flat rate:
-                                                            $15.00</label>
-                                                    </div>
-                                                    <div className="form-check text-start">
-                                                        <input type="checkbox" className="form-check-input bg-primary border-0"
-                                                            id="Shipping-3" name="Shipping-1" value="Shipping" />
-                                                        <label className="form-check-label" for="Shipping-3">Local Pickup:
-                                                            $8.00</label>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">
-                                                </th>
-                                                <td className="py-4">
-                                                    <p className="mb-0 text-dark text-uppercase py-2">TOTAL</p>
-                                                </td>
-                                                <td className="py-4"></td>
-                                                <td className="py-4"></td>
-                                                <td className="py-4">
-                                                    <div className="py-2 text-center border-bottom border-top">
-                                                        <p className="mb-0 text-dark">$135.00</p>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div className="row g-0 text-center align-items-center justify-content-center border-bottom py-2">
-                                    <div className="col-12">
-                                        <div className="form-check text-start my-2">
-                                            <input type="checkbox" className="form-check-input bg-primary border-0" id="Transfer-1"
-                                                name="Transfer" value="Transfer" />
-                                            <label className="form-check-label" for="Transfer-1">Direct Bank Transfer</label>
-                                        </div>
-                                        <p className="text-start text-dark">Make your payment directly into our bank account. Please
-                                            use your Order ID as the payment reference. Your order will not be shipped until the
-                                            funds have cleared in our account.</p>
-                                    </div>
-                                </div>
-                                <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-2">
-                                    <div className="col-12">
-                                        <div className="form-check text-start my-2">
-                                            <input type="checkbox" className="form-check-input bg-primary border-0" id="Payments-1"
-                                                name="Payments" value="Payments" />
-                                            <label className="form-check-label" for="Payments-1">Check Payments</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-2">
-                                    <div className="col-12">
-                                        <div className="form-check text-start my-2">
-                                            <input type="checkbox" className="form-check-input bg-primary border-0" id="Delivery-1"
-                                                name="Delivery" value="Delivery" />
-                                            <label className="form-check-label" for="Delivery-1">Cash On Delivery</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-2">
-                                    <div className="col-12">
-                                        <div className="form-check text-start my-2">
-                                            <input type="checkbox" className="form-check-input bg-primary border-0" id="Paypal-1"
-                                                name="Paypal" value="Paypal" />
-                                            <label className="form-check-label" for="Paypal-1">Paypal</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row g-4 text-center align-items-center justify-content-center pt-4">
-                                    <button type="button"
-                                        className="btn btn-primary border-secondary py-3 px-4 text-uppercase w-100 text-primary">Place
-                                        Order</button>
-                                </div>
-                            </div>
+                            }
                         </div>
-                    </form>
+                        <div className="col-lg-6 col-xl-6 wow fadeInUp" data-wow-delay="0.3s">
+                            <h3 className="mb-4 wow fadeInUp" data-wow-delay="0.1s">Items in Cart</h3>
+                            <div className="table-responsive">
+                                <table className="table">
+                                    <thead>
+                                        <tr className="text-center">
+                                            <th scope="col" className="text-start">Name</th>
+                                            <th scope="col">Brand</th>
+                                            <th scope="col">Price</th>
+                                            <th scope="col">Quantity</th>
+                                            <th scope="col">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {data.map(item => {
+                                            return <tr key={item.id} className="text-center">
+                                                <td scope="row" className="text-start py-4">
+                                                    <h6>{item.name}</h6>
+                                                    <p>{item.color}/{item.size}</p>
+                                                </td>
+                                                <td className="py-4">{item.brand}</td>
+                                                <td className="py-4">&#8377;{item.price}</td>
+                                                <td className="py-4 text-center">{item.quantity}</td>
+                                                <td className="py-4">&#8377;{item.total}</td>
+                                            </tr>
+                                        })}
+                                    </tbody>
+                                </table>
+                                <table className='table table-bordered'>
+                                    <tbody>
+                                        <tr>
+                                            <th>Subtotal</th>
+                                            <td>&#8377;{subtotal}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Shipping</th>
+                                            <td>&#8377;{shipping}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Total</th>
+                                            <td>&#8377;{total}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-2">
+                                <div className="col-6">
+                                    <div className="form-check text-start my-2">
+                                        <input type="checkbox" className="form-check-input bg-primary border-0" id="cod"
+                                            onChange={() => setSelected({ ...selected, paymentMode: "COD" })} checked={selected.paymentMode === "COD" ? true : false} />
+                                        <label className="form-check-label" htmlFor="cod">COD</label>
+                                    </div>
+                                </div>
+                                <div className="col-6">
+                                    <div className="form-check text-start my-2">
+                                        <input type="checkbox" className="form-check-input bg-primary border-0" id="netbanking"
+                                            onChange={() => setSelected({ ...selected, paymentMode: "Netbaking" })} checked={selected.paymentMode !== "COD" ? true : false} />
+                                        <label className="form-check-label" htmlFor="netbanking">Net Banking/Card/UPI</label>
+                                    </div>
+                                </div>
+                            </div>
+                            {data.address?.length !== 0 ? <div className="row g-4 text-center align-items-center justify-content-center pt-4">
+                                <button type="button" className="btn btn-primary border-secondary text-uppercase w-100 text-primary">Place Order</button>
+                            </div> : null}
+                        </div>
+                    </div>
                 </div>
             </div>
         </>
