@@ -58,6 +58,7 @@ export default function CartPage() {
             dispatch(getCart())
             if (CartStateData.length) {
                 let cart = CartStateData.filter(x => x.user === localStorage.getItem("userid"))
+                // let cart = CartStateData
                 setData(cart)
                 calculate(cart)
             }

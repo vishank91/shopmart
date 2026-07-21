@@ -1,8 +1,9 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { getSetting } from "../Redux/ActionCreators/SettingActionCreators"
+import { getNewsletter, createNewsletter } from "../Redux/ActionCreators/NewsletterActionCreators"
 export default function Footer() {
     let [settingData, setSettingData] = useState({
         siteName: import.meta.env.VITE_APP_SITE_NAME,
@@ -17,9 +18,29 @@ export default function Footer() {
         linkedin: import.meta.env.VITE_APP_LINKEDIN,
         instagram: import.meta.env.VITE_APP_INSTAGRAM,
     })
+    let [email, setEmail] = useState("")
+    let [message, setMessage] = useState()
+
+
     let SettingStateData = useSelector(state => state.SettingStateData)
+    let NewsletterStateData = useSelector(state => state.NewsletterStateData)
     let dispatch = useDispatch()
 
+    function postData(e) {
+        e.preventDefault()
+        if (email === "") {
+            setMessage("Please Enter a Valid Email Address")
+            return
+        }
+        let item = NewsletterStateData.find(x => x.email.toLocaleLowerCase() === email.toLocaleLowerCase())
+        if (item)
+            setMessage("This Email Address Has Already Registered With Us")
+        else {
+            dispatch(createNewsletter({ email: email, status: true }))
+            setEmail("")
+            setMessage("Thanks To subscribe Our Newsletter Service")
+        }
+    }
 
     useEffect(() => {
         (() => {
@@ -34,6 +55,9 @@ export default function Footer() {
         })()
     }, [SettingStateData.length])
 
+    useEffect(() => {
+        (() => dispatch(getNewsletter()))()
+    }, [NewsletterStateData.length])
     return (
         <>
             <div className="container-fluid footer py-5 wow fadeIn" data-wow-delay="0.2s">
@@ -94,12 +118,13 @@ export default function Footer() {
                                 <div className="footer-item">
                                     <h4 className="text-light mb-4">{settingData.siteName}</h4>
                                     <p className="mb-3 text-light">ShopMart is your trusted online shopping destination, offering quality products, great deals, and a seamless shopping experience. We bring convenience, value, and satisfaction right to your doorstep.</p>
-                                    <div className="position-relative mx-auto rounded-pill">
-                                        <input className="form-control rounded-pill w-100 py-3 ps-4 pe-5" type="text"
-                                            placeholder="Enter your email" />
-                                        <button type="button"
-                                            className="btn btn-primary rounded-pill position-absolute top-0 end-0 py-2 mt-2 me-2">SignUp</button>
-                                    </div>
+                                    <form onSubmit={postData}>
+                                        <div className="position-relative mx-auto rounded-pill">
+                                            <input className="form-control rounded-pill w-100 py-3 ps-4 pe-5" type="text" name='email' onChange={(e) => setEmail(e.target.value)} value={email} placeholder="Enter your email" />
+                                            <button type="submit" className="btn btn-primary rounded-pill position-absolute top-0 end-0 py-2 mt-2 me-2">Subscribe</button>
+                                        </div>
+                                    </form>
+                                    {message ? <p className='text-light'>{message}</p> : null}
                                 </div>
                                 <div className='mt-3'>
                                     <a href={settingData.facebook} target='_blank' className="text-light me-2"> <i className='fs-3 me-2 bi bi-facebook'></i></a>

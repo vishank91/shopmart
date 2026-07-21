@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 
 import Breadcrum from '../../Components/Breadcrum'
 
 import { getCart, deleteCart } from "../../Redux/ActionCreators/CartActionCreators"
-import { Link } from 'react-router-dom'
+import { createCheckout } from "../../Redux/ActionCreators/CheckoutActionCreators"
+import { getProduct, updateProduct } from "../../Redux/ActionCreators/ProductActionCreators"
 export default function CheckoutPage() {
     let [user, setUser] = useState({ address: [] })
 
@@ -19,7 +21,34 @@ export default function CheckoutPage() {
     })
 
     let CartStateData = useSelector(state => state.CartStateData)
+    let ProductStateData = useSelector(state => state.ProductStateData)
     let dispatch = useDispatch()
+    let navigate = useNavigate()
+
+    function placeOrder() {
+        let item = {
+            user: user.id,
+            deliveryAddress: selected.deliveryAddress,
+            orderStatus: "Order Has Been Placed",
+            paymentMode: selected.paymentMode,
+            paymentStatus: "Pending",
+            subtotal: subtotal,
+            shipping: shipping,
+            total: total,
+            date: new Date(),
+            products: data
+        }
+        dispatch(createCheckout({ ...item }))
+        data.forEach(cart => {
+            let p = ProductStateData.find(pr => pr.id === cart.product)
+            p.stockQuantity = p.stockQuantity - cart.quantity
+            p.stock = p.stockQuantity === 0 ? false : true
+            dispatch(updateProduct({ ...p }))
+
+            dispatch(deleteCart({ id: cart.id }))
+        })
+        navigate("/order-confirmation")
+    }
 
     function calculate(cart) {
         let sum = 0
@@ -39,6 +68,7 @@ export default function CheckoutPage() {
             dispatch(getCart())
             if (CartStateData.length) {
                 let cart = CartStateData.filter(x => x.user === localStorage.getItem("userid"))
+                // let cart = CartStateData
                 setData(cart)
                 calculate(cart)
             }
@@ -59,6 +89,10 @@ export default function CheckoutPage() {
                 setSelected({ ...selected, deliveryAddress: response.address[0] })
         })()
     }, [])
+
+    useEffect(() => {
+        (() => dispatch(getProduct()))()
+    }, [ProductStateData.length])
     return (
         <>
             <Breadcrum title="Checkout" />
@@ -146,7 +180,7 @@ export default function CheckoutPage() {
                                 </div>
                             </div>
                             {data.address?.length !== 0 ? <div className="row g-4 text-center align-items-center justify-content-center pt-4">
-                                <button type="button" className="btn btn-primary border-secondary text-uppercase w-100 text-primary">Place Order</button>
+                                <button type="button" onClick={placeOrder} className="btn btn-primary border-secondary text-uppercase w-100 text-primary">Place Order</button>
                             </div> : null}
                         </div>
                     </div>

@@ -18,6 +18,12 @@ import ContactUsPage from './Pages/ContactUsPage'
 import PrivacyPolicy from './Pages/PrivacyPolicy'
 import TermsAndConditions from './Pages/TermsAndConditions'
 import ReturnAndRefundPolicy from './Pages/ReturnAndRefundPolicy'
+
+import SignupPage from './Pages/User/SignupPage'
+import LoginPage from './Pages/User/LoginPage'
+import ProfilePage from './Pages/User/ProfilePage'
+import OrderConfirmation from './Pages/User/OrderConfirmation'
+
 import AdminHomePage from './Pages/Admin/AdminHomePage'
 
 import AdminMaincategoryPage from './Pages/Admin/Maincategory/AdminMaincategoryPage'
@@ -46,9 +52,7 @@ import AdminProductPage from './Pages/Admin/Product/AdminProductPage'
 import AdminProductCreatePage from './Pages/Admin/Product/AdminProductCreatePage'
 import AdminProductUpdatePage from './Pages/Admin/Product/AdminProductUpdatePage'
 
-import SignupPage from './Pages/User/SignupPage'
-import LoginPage from './Pages/User/LoginPage'
-import ProfilePage from './Pages/User/ProfilePage'
+import AdminNewsletterPage from './Pages/Admin/Newsletter/AdminNewsletterPage'
 
 export default function App() {
   return (
@@ -76,6 +80,7 @@ export default function App() {
         <Route path='/profile' element={<ProfilePage />} />
         <Route path='/cart' element={<CartPage />} />
         <Route path='/checkout' element={<CheckoutPage />} />
+        <Route path='/order-confirmation' element={<OrderConfirmation />} />
 
         {/* Admin Routes */}
         <Route path='/admin' element={<AdminHomePage />} />
@@ -105,6 +110,9 @@ export default function App() {
         <Route path='/admin/product' element={<AdminProductPage />} />
         <Route path='/admin/product/create' element={<AdminProductCreatePage />} />
         <Route path='/admin/product/update/:id' element={<AdminProductUpdatePage />} />
+
+        <Route path='/admin/newsletter' element={<AdminNewsletterPage />} />
+
 
         <Route path='/*' element={<ErrorPage />} />
 

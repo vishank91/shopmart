@@ -21,6 +21,7 @@ export default function Wishlist() {
       dispatch(getWishlist())
       if (WishlistStateData.length) {
         setData(WishlistStateData.filter(x => x.user === localStorage.getItem("userid")))
+        // setData(WishlistStateData)
       }
     })()
   }, [WishlistStateData.length])
