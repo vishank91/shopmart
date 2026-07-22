@@ -54,6 +54,15 @@ import AdminProductUpdatePage from './Pages/Admin/Product/AdminProductUpdatePage
 
 import AdminNewsletterPage from './Pages/Admin/Newsletter/AdminNewsletterPage'
 
+import AdminContactUsPage from './Pages/Admin/ContactUs/AdminContactUsPage'
+import AdminContactUsShowPage from './Pages/Admin/ContactUs/AdminContactUsShowPage'
+
+import AdminCheckoutPage from './Pages/Admin/Checkout/AdminCheckoutPage'
+import AdminCheckoutShowPage from './Pages/Admin/Checkout/AdminCheckoutShowPage'
+
+import AdminUserPage from './Pages/Admin/User/AdminUserPage'
+import AdminUserCreatePage from './Pages/Admin/User/AdminUserCreatePage'
+import AdminUserUpdatePage from './Pages/Admin/User/AdminUserUpdatePage'
 export default function App() {
   return (
     <BrowserRouter>
@@ -77,43 +86,61 @@ export default function App() {
         <Route path='/login' element={<LoginPage />} />
 
         {/* User Routes */}
-        <Route path='/profile' element={<ProfilePage />} />
-        <Route path='/cart' element={<CartPage />} />
-        <Route path='/checkout' element={<CheckoutPage />} />
-        <Route path='/order-confirmation' element={<OrderConfirmation />} />
+        {localStorage.getItem("login") ?
+          <>
+            <Route path='/profile' element={<ProfilePage />} />
+            <Route path='/cart' element={<CartPage />} />
+            <Route path='/checkout' element={<CheckoutPage />} />
+            <Route path='/order-confirmation' element={<OrderConfirmation />} />
+          </> : null}
 
         {/* Admin Routes */}
-        <Route path='/admin' element={<AdminHomePage />} />
+        {localStorage.getItem("login") && localStorage.getItem("role") !== "Buyer" ?
+          <>
+            <Route path='/admin' element={<AdminHomePage />} />
 
-        <Route path='/admin/maincategory' element={<AdminMaincategoryPage />} />
-        <Route path='/admin/maincategory/create' element={<AdminMaincategoryCreatePage />} />
-        <Route path='/admin/maincategory/update/:id' element={<AdminMaincategoryUpdatePage />} />
+            <Route path='/admin/maincategory' element={<AdminMaincategoryPage />} />
+            <Route path='/admin/maincategory/create' element={<AdminMaincategoryCreatePage />} />
+            <Route path='/admin/maincategory/update/:id' element={<AdminMaincategoryUpdatePage />} />
 
-        <Route path='/admin/subcategory' element={<AdminSubcategoryPage />} />
-        <Route path='/admin/subcategory/create' element={<AdminSubcategoryCreatePage />} />
-        <Route path='/admin/subcategory/update/:id' element={<AdminSubcategoryUpdatePage />} />
+            <Route path='/admin/subcategory' element={<AdminSubcategoryPage />} />
+            <Route path='/admin/subcategory/create' element={<AdminSubcategoryCreatePage />} />
+            <Route path='/admin/subcategory/update/:id' element={<AdminSubcategoryUpdatePage />} />
 
-        <Route path='/admin/brand' element={<AdminBrandPage />} />
-        <Route path='/admin/brand/create' element={<AdminBrandCreatePage />} />
-        <Route path='/admin/brand/update/:id' element={<AdminBrandUpdatePage />} />
+            <Route path='/admin/brand' element={<AdminBrandPage />} />
+            <Route path='/admin/brand/create' element={<AdminBrandCreatePage />} />
+            <Route path='/admin/brand/update/:id' element={<AdminBrandUpdatePage />} />
 
-        <Route path='/admin/feature' element={<AdminFeaturePage />} />
-        <Route path='/admin/feature/create' element={<AdminFeatureCreatePage />} />
-        <Route path='/admin/feature/update/:id' element={<AdminFeatureUpdatePage />} />
+            <Route path='/admin/feature' element={<AdminFeaturePage />} />
+            <Route path='/admin/feature/create' element={<AdminFeatureCreatePage />} />
+            <Route path='/admin/feature/update/:id' element={<AdminFeatureUpdatePage />} />
 
-        <Route path='/admin/faq' element={<AdminFaqPage />} />
-        <Route path='/admin/faq/create' element={<AdminFaqCreatePage />} />
-        <Route path='/admin/faq/update/:id' element={<AdminFaqUpdatePage />} />
+            <Route path='/admin/faq' element={<AdminFaqPage />} />
+            <Route path='/admin/faq/create' element={<AdminFaqCreatePage />} />
+            <Route path='/admin/faq/update/:id' element={<AdminFaqUpdatePage />} />
 
-        <Route path='/admin/setting' element={<AdminSettingPage />} />
+            <Route path='/admin/setting' element={<AdminSettingPage />} />
 
-        <Route path='/admin/product' element={<AdminProductPage />} />
-        <Route path='/admin/product/create' element={<AdminProductCreatePage />} />
-        <Route path='/admin/product/update/:id' element={<AdminProductUpdatePage />} />
+            <Route path='/admin/product' element={<AdminProductPage />} />
+            <Route path='/admin/product/create' element={<AdminProductCreatePage />} />
+            <Route path='/admin/product/update/:id' element={<AdminProductUpdatePage />} />
 
-        <Route path='/admin/newsletter' element={<AdminNewsletterPage />} />
+            <Route path='/admin/newsletter' element={<AdminNewsletterPage />} />
 
+            <Route path='/admin/contact' element={<AdminContactUsPage />} />
+            <Route path='/admin/contact/show/:id' element={<AdminContactUsShowPage />} />
 
+            <Route path='/admin/checkout' element={<AdminCheckoutPage />} />
+            <Route path='/admin/checkout/show/:id' element={<AdminCheckoutShowPage />} />
+
+            {localStorage.getItem("role") === "Super Admin" ?
+              <>
+                <Route path='/admin/user' element={<AdminUserPage />} />
+                <Route path='/admin/user/create' element={<AdminUserCreatePage />} />
+                <Route path='/admin/user/update/:id' element={<AdminUserUpdatePage />} />
+              </> : null}
+
+          </> : null}
         <Route path='/*' element={<ErrorPage />} />
 
       </Routes>

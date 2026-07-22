@@ -91,7 +91,7 @@ export default function Navbar() {
                     className="fa fa-home me-2"></i> {localStorage.getItem("name")}</small></a>
                   <div className="dropdown-menu rounded">
                     <Link to="/profile?option=Profile" className="dropdown-item"> Profile</Link>
-                    {localStorage.getItem("role") === "Buyer" ? null : <Link to="/profile?option=profile" className="dropdown-item"> Admin Dashboard</Link>}
+                    {localStorage.getItem("role") === "Buyer" ? null : <Link to="/admin" className="dropdown-item"> Admin Dashboard</Link>}
                     <Link to="/profile?option=Wishlist" className="dropdown-item"> Wishlist</Link>
                     <Link to="/profile?option=Orders" className="dropdown-item"> Orders</Link>
                     <Link to="/profile?option=Address" className="dropdown-item"> Address</Link>
@@ -180,7 +180,6 @@ export default function Navbar() {
                   <Link to="/faq" className="nav-item nav-link text-light">Faq</Link>
                   <Link to="/testimonial" className="nav-item nav-link text-light">Testimonial</Link>
                   <Link to="/contact" className="nav-item nav-link text-light">Contact Us</Link>
-                  <Link to="/admin" className="nav-item nav-link text-light">Admin</Link>
                   {/* <div className="nav-item dropdown">
                     <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div className="dropdown-menu m-0">

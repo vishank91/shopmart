@@ -12,8 +12,10 @@ export default function Orders() {
   useEffect(() => {
     (() => {
       dispatch(getCheckout())
-      setOrders(CheckoutStateData.filter(x => x.user === localStorage.getItem("userid")))
-      // setOrders(CheckoutStateData)
+      if (CheckoutStateData.length) {
+        setOrders(CheckoutStateData.filter(x => x.user === localStorage.getItem("userid")))
+        // setOrders(CheckoutStateData)
+      }
     })()
   }, [CheckoutStateData.length])
   return (
@@ -74,23 +76,23 @@ export default function Orders() {
                   </tr>
                 </thead>
                 <tbody>
-                  {item.products?.map(item => {
-                    return <tr key={item.id}>
+                  {item.products?.map(record => {
+                    return <tr key={record.id}>
                       <td>
-                        <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}${item.pic}`} target='_blank'>
-                          <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}${item.pic}`} height={70} width={70} alt="" />
+                        <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}${record.pic}`} target='_blank'>
+                          <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}${record.pic}`} height={70} width={70} alt="" />
                         </Link>
                       </td>
-                      <td>{item.name}</td>
-                      <td>{item.brand}</td>
-                      <td>{item.color}</td>
-                      <td>{item.size}</td>
-                      <td>&#8377;{item.price}</td>
-                      <td>{item.quantity}</td>
-                      <td>&#8377;{item.total}</td>
+                      <td>{record.name}</td>
+                      <td>{record.brand}</td>
+                      <td>{record.color}</td>
+                      <td>{record.size}</td>
+                      <td>&#8377;{record.price}</td>
+                      <td>{record.quantity}</td>
+                      <td>&#8377;{record.total}</td>
                       <td>
                         <div className="btn-group">
-                          <Link to={`/product/${item.product}`} className='btn btn-primary'>Buy Again</Link>
+                          <Link to={`/product/${record.product}`} className='btn btn-primary'>Buy Again</Link>
                           {item.orderStatus === "Delivered" ? <button className='btn btn-secondary'>Write Review</button> : null}
                         </div>
                       </td>

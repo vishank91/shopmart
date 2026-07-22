@@ -22,6 +22,7 @@ export default function TextValidators(e) {
         case "username":
         case "icon":
         case "question":
+        case "subject":
             if (!value || value.length === 0)
                 return name + " Field is Mendatory"
             else if (value.length < 2 || value.length > 100)
@@ -75,7 +76,6 @@ export default function TextValidators(e) {
 
         case "shortDescription":
         case "answer":
-        case "subject":
             if (!value || value.length === 0)
                 return name + " Field is Mendatory"
             else if (value.length < 20 || value.length > 1000)
