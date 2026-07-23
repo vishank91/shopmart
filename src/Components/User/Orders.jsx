@@ -1,13 +1,81 @@
 import React, { useEffect, useState } from 'react'
-
-import { getCheckout } from "../../Redux/ActionCreators/CheckoutActionCreators"
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+
+import { getCheckout } from "../../Redux/ActionCreators/CheckoutActionCreators"
+import { getTestimonial, createTestimonial, updateTestimonial } from "../../Redux/ActionCreators/TestimonialActionCreators"
+
+const inputOptions = {
+  message: "",
+  star: "5"
+}
 export default function Orders() {
   let [orders, setOrders] = useState([])
+  let [review, setReview] = useState([])
+
+  let [showModal, setShowModal] = useState(false)
+  let [option, setOption] = useState({})
+
+  let [inputData, setInputData] = useState({ ...inputOptions })
 
   let CheckoutStateData = useSelector(state => state.CheckoutStateData)
+  let TestimonialStateData = useSelector(state => state.TestimonialStateData)
   let dispatch = useDispatch()
+
+  function create(product) {
+    setShowModal(true)
+    setOption({
+      type: "Create",
+      product: product
+    })
+    setInputData({ ...inputOptions })
+  }
+
+  function update(product) {
+    setShowModal(true)
+    setOption({
+      type: "Update",
+      product: product
+    })
+    setInputData({ ...review.find(x => x.product === product.id) })
+  }
+
+  function getInputData(e) {
+    let { name, value } = e.target
+    setInputData({ ...inputData, [name]: value })
+  }
+
+  async function postData(e) {
+    e.preventDefault()
+    if (option.type === "Create") {
+      let item = {
+        user: localStorage.getItem("userid"),
+        username: localStorage.getItem("name"),
+        product: option.product.id,
+        productName: option.product.name,
+        message: inputData.message,
+        star: inputData.star
+      }
+      dispatch(createTestimonial(item))
+      review.push(item)
+      setReview(review)
+    }
+    else{
+      let index = review.findIndex(x=>x.product===option.product.id)
+      review[index].message = inputData.message
+      review[index].star = inputData.star
+      dispatch(updateTestimonial({...review[index]}))
+      setReview(review)
+    }
+    setShowModal(false)
+    setInputData(inputOptions)
+  }
+
+  function check(pid) {
+    let item = review.find(x => x.product === pid)
+    return item ? true : false
+  }
+
 
   useEffect(() => {
     (() => {
@@ -18,6 +86,15 @@ export default function Orders() {
       }
     })()
   }, [CheckoutStateData.length])
+
+  useEffect(() => {
+    (() => {
+      dispatch(getTestimonial())
+      if (TestimonialStateData.length) {
+        setReview(TestimonialStateData.filter(x => x.user === localStorage.getItem("userid")))
+      }
+    })()
+  }, [TestimonialStateData.length])
   return (
     <>
       {orders.length ?
@@ -93,7 +170,11 @@ export default function Orders() {
                       <td>
                         <div className="btn-group">
                           <Link to={`/product/${record.product}`} className='btn btn-primary'>Buy Again</Link>
-                          {item.orderStatus === "Delivered" ? <button className='btn btn-secondary'>Write Review</button> : null}
+                          {item.orderStatus === "Delivered" ?
+                            check(record.product) ?
+                              <button className='btn btn-primary' onClick={() => update({ id: record.product, name: record.name })}>Update Review</button> :
+                              <button className='btn btn-secondary' onClick={() => create({ id: record.product, name: record.name })}>Write Review</button>
+                            : null}
                         </div>
                       </td>
                     </tr>
@@ -107,6 +188,43 @@ export default function Orders() {
           <h3>No Order History Found</h3>
           <Link to="/shop" className='btn btn-primary w-25 m-auto'>Shop Now</Link>
         </div>}
+
+
+      <div className={`modal fade ${showModal ? 'show d-block' : ''}`} id="exampleModal">
+        <div className="modal-dialog  modal-dialog-scrollable">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalLabel">{option.type}</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowModal(false)}></button>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={postData}>
+                <div className="row">
+                  <div className="col-12 mb-3">
+                    <label>Message*</label>
+                    <textarea name="message" rows={8} required value={inputData.message} onChange={getInputData} placeholder='Message' className='form-control border-primary' />
+                  </div>
+
+                  <div className="col-12 mb-3">
+                    <label>Star*</label>
+                    <select name="star" value={inputData.star} onChange={getInputData} className='form-select'>
+                      <option>5</option>
+                      <option>4</option>
+                      <option>3</option>
+                      <option>2</option>
+                      <option>1</option>
+                    </select>
+                  </div>
+
+                  <div className="modal-footer">
+                    <button type="submit" className="btn btn-primary w-100">{option.type}</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   )
 }

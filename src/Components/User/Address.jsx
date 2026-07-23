@@ -149,7 +149,7 @@ export default function Address() {
 
                     <div className="col-12 mb-3">
                       {/* <label>Address*</label> */}
-                      <textarea name="address" required value={inputData.address} onChange={getInputData} placeholder='Full Name' className='form-control border-primary' />
+                      <textarea name="address" required value={inputData.address} onChange={getInputData} placeholder='Address' className='form-control border-primary' />
                     </div>
 
                     <div className="col-6 mb-3">

@@ -1,24 +1,36 @@
 /*** Spinner Start ***/
 /*** Spinner ***/
+.my-testimonial {
+    height: 200px;
+    overflow: auto;
+}
 
-.my-card{
+.my-testimonial::-webkit-scrollbar {
+    display: none;
+}
+
+
+.my-card {
     background-color: white;
     color: black;
     border-radius: 20px;
 }
-.my-card p{
+
+.my-card p {
     text-align: justify;
 }
-.my-card h3{
+
+.my-card h3 {
     text-align: center;
     color: black;
 }
-.my-card:hover{
+
+.my-card:hover {
     background-color: #2c72d4;
     color: white !important;
 }
 
-.my-card:hover h3{
+.my-card:hover h3 {
     color: white !important;
 }
 

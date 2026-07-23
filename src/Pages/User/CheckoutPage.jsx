@@ -101,7 +101,7 @@ export default function CheckoutPage() {
                     <div className="row g-5">
                         <div className="col-lg-6 col-xl-6 wow fadeInUp" data-wow-delay="0.3s">
                             <h3 className="mb-4 wow fadeInUp" data-wow-delay="0.1s">Billing Address</h3>
-                            {data.address?.length !== 0 ?
+                            {user.address && user.address?.length !== 0 ?
                                 user.address?.map((item, index) => {
                                     return <div key={index} className='card p-3 mb-3' onClick={() => setSelected({ ...selected, deliveryAddress: item })}>
                                         <h6>{item.name}</h6>
@@ -179,7 +179,7 @@ export default function CheckoutPage() {
                                     </div>
                                 </div>
                             </div>
-                            {data.address?.length !== 0 ? <div className="row g-4 text-center align-items-center justify-content-center pt-4">
+                            {user.address && user.address?.length !== 0 ? <div className="row g-4 text-center align-items-center justify-content-center pt-4">
                                 <button type="button" onClick={placeOrder} className="btn btn-primary border-secondary text-uppercase w-100 text-primary">Place Order</button>
                             </div> : null}
                         </div>

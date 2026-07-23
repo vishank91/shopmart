@@ -14,6 +14,7 @@ import ProductSlider from '../Components/ProductSlider'
 import { getProduct } from "../Redux/ActionCreators/ProductActionCreators"
 import { createCart, getCart } from "../Redux/ActionCreators/CartActionCreators"
 import { createWishlist, getWishlist } from "../Redux/ActionCreators/WishlistActionCreators"
+import { getTestimonial } from "../Redux/ActionCreators/TestimonialActionCreators"
 const sliderOptions = {
     effect: 'cube',
     grabCursor: true,
@@ -30,6 +31,7 @@ const sliderOptions = {
 }
 export default function ProductPage() {
     let { id } = useParams()
+    let [review, setReview] = useState([])
 
     let [selected, setSelected] = useState({
         color: "",
@@ -46,6 +48,7 @@ export default function ProductPage() {
     let ProductStateData = useSelector(state => state.ProductStateData)
     let CartStateData = useSelector(state => state.CartStateData)
     let WishlistStateData = useSelector(state => state.WishlistStateData)
+    let TestimonialStateData = useSelector(state => state.TestimonialStateData)
 
     let dispatch = useDispatch()
     let navigate = useNavigate()
@@ -59,7 +62,7 @@ export default function ProductPage() {
                 quantity: selected.quantity,
                 color: selected.color,
                 size: selected.size,
-                total: selected.quantity*data.finalPrice,
+                total: selected.quantity * data.finalPrice,
 
                 //Remove Following Lines in Case Of Real Backend
                 name: data.name,
@@ -72,6 +75,20 @@ export default function ProductPage() {
         }
         navigate("/cart")
     }
+
+    function getStar(star) {
+        if (star === "5")
+            return <span><i className='bi bi-star-fill text-warning'></i><i className='bi bi-star-fill text-warning'></i><i className='bi bi-star-fill text-warning'></i><i className='bi bi-star-fill text-warning'></i><i className='bi bi-star-fill text-warning'></i></span>
+        else if (star === "4")
+            return <span><i className='bi bi-star-fill text-warning'></i><i className='bi bi-star-fill text-warning'></i><i className='bi bi-star-fill text-warning'></i><i className='bi bi-star-fill text-warning'></i><i className='bi bi-star text-warning'></i></span>
+        else if (star === "3")
+            return <span><i className='bi bi-star-fill text-warning'></i><i className='bi bi-star-fill text-warning'></i><i className='bi bi-star-fill text-warning'></i><i className='bi bi-star text-warning'></i><i className='bi bi-star text-warning'></i></span>
+        else if (star === "2")
+            return <span><i className='bi bi-star-fill text-warning'></i><i className='bi bi-star-fill text-warning'></i><i className='bi bi-star text-warning'></i><i className='bi bi-star text-warning'></i><i className='bi bi-star text-warning'></i></span>
+        else
+            return <span><i className='bi bi-star-fill text-warning'></i><i className='bi bi-star text-warning'></i><i className='bi bi-star text-warning'></i><i className='bi bi-star text-warning'></i><i className='bi bi-star text-warning'></i></span>
+    }
+
 
     function addToWishlist() {
         let item = WishlistStateData.find(x => x.product === id && x.user === localStorage.getItem("userid"))
@@ -110,6 +127,15 @@ export default function ProductPage() {
             dispatch(getWishlist())
         })()
     }, [WishlistStateData.length])
+
+    useEffect(() => {
+        (() => {
+            dispatch(getTestimonial())
+            if (TestimonialStateData.length) {
+                setReview(TestimonialStateData.filter(x => x.product === id))
+            }
+        })()
+    }, [TestimonialStateData.length])
 
     useEffect(() => {
         (() => {
@@ -228,54 +254,21 @@ export default function ProductPage() {
                                         </div>
                                         <div className="tab-pane" id="nav-mission" role="tabpanel"
                                             aria-labelledby="nav-mission-tab">
-                                            <div className="d-flex">
-                                                <img src="img/avatar.jpg" className="img-fluid rounded-circle p-3"
-                                                    style={{ width: "100px", height: "100px" }} alt="" />
-                                                <div className="">
-                                                    <p className="mb-2" style={{ fontSize: "14px" }}>April 12, 2024</p>
-                                                    <div className="d-flex justify-content-between">
-                                                        <h5>Jason Smith</h5>
-                                                        <div className="d-flex mb-3">
-                                                            <i className="fa fa-star text-secondary"></i>
-                                                            <i className="fa fa-star text-secondary"></i>
-                                                            <i className="fa fa-star text-secondary"></i>
-                                                            <i className="fa fa-star text-secondary"></i>
-                                                            <i className="fa fa-star"></i>
+                                            {review.length ?
+                                                review.map(item => {
+                                                    return <div className="d-flex card p-4" key={item.id}>
+                                                        <div className="">
+                                                            <div className="d-flex justify-content-between">
+                                                                <h5>{item.username}</h5>
+                                                                {getStar(item.star)}
+                                                            </div>
+                                                            <p>{item.message}</p>
                                                         </div>
                                                     </div>
-                                                    <p>The generated Lorem Ipsum is therefore always free from repetition
-                                                        injected humour, or non-characteristic
-                                                        words etc. Susp endisse ultricies nisi vel quam suscipit </p>
-                                                </div>
-                                            </div>
-                                            <div className="d-flex">
-                                                <img src="img/avatar.jpg" className="img-fluid rounded-circle p-3"
-                                                    style={{ width: "100px", height: "100px" }} alt="" />
-                                                <div className="">
-                                                    <p className="mb-2" style={{ fontSize: "14px" }}>April 12, 2024</p>
-                                                    <div className="d-flex justify-content-between">
-                                                        <h5>Sam Peters</h5>
-                                                        <div className="d-flex mb-3">
-                                                            <i className="fa fa-star text-secondary"></i>
-                                                            <i className="fa fa-star text-secondary"></i>
-                                                            <i className="fa fa-star text-secondary"></i>
-                                                            <i className="fa fa-star"></i>
-                                                            <i className="fa fa-star"></i>
-                                                        </div>
-                                                    </div>
-                                                    <p className="text-dark">The generated Lorem Ipsum is therefore always free from
-                                                        repetition injected humour, or non-characteristic
-                                                        words etc. Susp endisse ultricies nisi vel quam suscipit </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="tab-pane" id="nav-vision" role="tabpanel">
-                                            <p className="text-dark">Tempor erat elitr rebum at clita. Diam dolor diam ipsum et
-                                                tempor sit. Aliqu diam
-                                                amet diam et eos labore. 3</p>
-                                            <p className="mb-0">Diam dolor diam ipsum et tempor sit. Aliqu diam amet diam et eos
-                                                labore.
-                                                Clita erat ipsum et lorem et sit</p>
+                                                }) :
+                                                <div className='card p-5'>
+                                                    No Reviews
+                                                </div>}
                                         </div>
                                     </div>
                                 </div>
